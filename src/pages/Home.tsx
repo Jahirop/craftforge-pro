@@ -289,11 +289,11 @@ export default function Home() {
                 transition={{ delay: i * 0.08, duration: 0.5 }}
                 className="flex flex-col rounded-[20px] overflow-hidden border transition-all duration-300 hover:-translate-y-1"
                 style={{
-                  background: i === 5 ? "rgba(236,72,153,0.08)" : "rgba(255,255,255,0.05)",
-                  borderColor: i === 5 ? "rgba(236,72,153,0.25)" : "rgba(255,255,255,0.09)",
+                  background: `rgba(${hexToRgb(s.color)},0.07)`,
+                  borderColor: s.color + "44",
                   backdropFilter: "blur(20px)",
                   WebkitBackdropFilter: "blur(20px)",
-                  boxShadow: i === 5 ? "0 0 40px rgba(236,72,153,0.12), inset 0 0 30px rgba(236,72,153,0.05)" : "none",
+                  boxShadow: `0 0 36px ${s.color}18, inset 0 0 24px ${s.color}08`,
                 }}
               >
                 {/* Card top */}
@@ -358,8 +358,13 @@ export default function Home() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
-            className="relative glass-card rounded-3xl p-7 sm:p-12 md:p-16 text-center overflow-hidden border border-brand-purple/20"
-            style={{ backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)" }}
+            className="relative rounded-3xl p-7 sm:p-12 md:p-16 text-center overflow-hidden border border-brand-purple/20"
+            style={{
+              background: "rgba(124,58,237,0.07)",
+              backdropFilter: "blur(20px)",
+              WebkitBackdropFilter: "blur(20px)",
+              boxShadow: "0 0 40px rgba(124,58,237,0.12), inset 0 0 24px rgba(124,58,237,0.05)",
+            }}
           >
             {/* Glow */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-80 h-40 bg-brand-purple/20 rounded-full blur-3xl pointer-events-none" />

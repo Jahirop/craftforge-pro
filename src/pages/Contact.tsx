@@ -87,7 +87,12 @@ const FAQS = [
 function FAQItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="glass-card rounded-2xl overflow-hidden">
+    <div className="rounded-2xl overflow-hidden" style={{
+      background: "rgba(124,58,237,0.07)",
+      border: "1px solid rgba(124,58,237,0.25)",
+      backdropFilter: "blur(20px)",
+      WebkitBackdropFilter: "blur(20px)",
+    }}>
       <button
         className="w-full flex items-center justify-between gap-4 p-5 text-left"
         onClick={() => setOpen(!open)}
@@ -174,7 +179,14 @@ export default function Contact() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="glass-card rounded-3xl p-8 md:p-10 border border-white/07"
+              className="rounded-3xl p-8 md:p-10"
+              style={{
+                background: "rgba(124,58,237,0.07)",
+                border: "1px solid rgba(124,58,237,0.25)",
+                backdropFilter: "blur(20px)",
+                WebkitBackdropFilter: "blur(20px)",
+                boxShadow: "0 0 40px rgba(124,58,237,0.10), inset 0 0 24px rgba(124,58,237,0.04)",
+              }}
             >
               {submitted ? (
                 <motion.div
@@ -293,7 +305,14 @@ export default function Contact() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="glass-card rounded-3xl p-7 border border-white/07"
+              className="rounded-3xl p-7"
+              style={{
+                background: "rgba(124,58,237,0.07)",
+                border: "1px solid rgba(124,58,237,0.25)",
+                backdropFilter: "blur(20px)",
+                WebkitBackdropFilter: "blur(20px)",
+                boxShadow: "0 0 30px rgba(124,58,237,0.10)",
+              }}
             >
               <h3 className="font-poppins font-bold text-lg text-white mb-5">CONTACT INFO</h3>
               <div className="flex flex-col gap-3">
@@ -332,7 +351,14 @@ export default function Contact() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="glass-card rounded-3xl p-7 border border-brand-green/15"
+              className="rounded-3xl p-7"
+              style={{
+                background: "rgba(37,211,102,0.06)",
+                border: "1px solid rgba(37,211,102,0.25)",
+                backdropFilter: "blur(20px)",
+                WebkitBackdropFilter: "blur(20px)",
+                boxShadow: "0 0 30px rgba(37,211,102,0.10)",
+              }}
             >
               <div className="flex items-center gap-2 mb-3">
                 <span className="w-2.5 h-2.5 rounded-full bg-brand-green animate-pulse" />

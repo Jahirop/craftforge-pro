@@ -187,7 +187,13 @@ function FAQItem({ q, a }: { q: string; a: string }) {
   return (
     <motion.div
       layout
-      className="glass-card rounded-2xl border border-white/07 overflow-hidden"
+      className="rounded-2xl overflow-hidden"
+      style={{
+        background: "rgba(255,255,255,0.04)",
+        border: "1px solid rgba(255,255,255,0.07)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+      }}
     >
       <button
         className="w-full flex items-center justify-between gap-4 p-6 text-left"
@@ -259,7 +265,14 @@ export default function Services() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.05 * i }}
-              className="glass-card glass-card-hover rounded-3xl p-8 md:p-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-start relative overflow-hidden"
+              className="glass-card-hover rounded-3xl p-8 md:p-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-start relative overflow-hidden"
+              style={{
+                background: `rgba(255,255,255,0.04)`,
+                border: `1px solid ${color}33`,
+                backdropFilter: "blur(20px)",
+                WebkitBackdropFilter: "blur(20px)",
+                boxShadow: `0 0 40px ${color}12, inset 0 0 20px ${color}06`,
+              }}
             >
               <div
                 className="absolute -top-10 -right-10 w-48 h-48 rounded-full blur-3xl opacity-20"
@@ -336,8 +349,14 @@ export default function Services() {
                 className={`relative rounded-3xl p-8 flex flex-col gap-6 ${
                   highlight
                     ? "bg-brand-gradient shadow-2xl shadow-brand-purple/30"
-                    : "glass-card glass-card-hover"
+                    : "glass-card-hover"
                 }`}
+                style={!highlight ? {
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.07)",
+                  backdropFilter: "blur(20px)",
+                  WebkitBackdropFilter: "blur(20px)",
+                } : undefined}
               >
                 {highlight && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-brand-orange rounded-full text-[10px] font-bold uppercase tracking-widest text-white">
@@ -406,7 +425,12 @@ export default function Services() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="glass-card rounded-3xl p-12 border border-brand-purple/20"
+            className="rounded-3xl p-12 border border-brand-purple/20"
+            style={{
+              background: "rgba(255,255,255,0.04)",
+              backdropFilter: "blur(20px)",
+              WebkitBackdropFilter: "blur(20px)",
+            }}
           >
             <RevealText
               text="NOT SURE WHICH SERVICE YOU NEED?"

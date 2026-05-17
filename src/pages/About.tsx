@@ -15,6 +15,16 @@ const SKILLS = [
   "Adobe Suite", "Figma", "Midjourney", "Stable Diffusion",
 ];
 
+const TOOL_COLOR: Record<string, string> = {
+  "AI Design": "#EC4899",
+  "AI Video": "#4F46E5",
+  "Automation": "#10B981",
+  "AI LLM": "#06B6D4",
+  "Vibe Code": "#3B82F6",
+  "Animation": "#7C3AED",
+  "Design": "#F59E0B",
+};
+
 const TOOLS = [
   { name: "Midjourney", category: "AI Design" },
   { name: "Runway ML", category: "AI Video" },
@@ -294,7 +304,8 @@ export default function About() {
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.4 + i * 0.05 }}
-                  className="px-3 py-1.5 glass-card rounded-full text-xs font-medium text-white/80 border border-white/10 uppercase"
+                  className="px-3 py-1.5 rounded-full text-xs font-medium text-white/80 border border-white/10 uppercase"
+                  style={{ backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", background: "rgba(124,58,237,0.12)" }}
                 >
                   {skill}
                 </motion.span>
@@ -339,7 +350,14 @@ export default function About() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1, duration: 0.5 }}
-                className="glass-card glass-card-hover rounded-3xl p-8 flex gap-5 items-start relative overflow-hidden"
+                className="glass-card-hover rounded-3xl p-8 flex gap-5 items-start relative overflow-hidden"
+                style={{
+                  background: `${color}0d`,
+                  border: `1px solid ${color}33`,
+                  backdropFilter: "blur(20px)",
+                  WebkitBackdropFilter: "blur(20px)",
+                  boxShadow: `0 0 36px ${color}14, inset 0 0 20px ${color}06`,
+                }}
               >
                 <div
                   className="absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl opacity-15"
@@ -386,19 +404,29 @@ export default function About() {
             subtext="The AI first toolkit powering every Craftforge project."
           />
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
-            {TOOLS.map(({ name, category }, i) => (
+            {TOOLS.map(({ name, category }, i) => {
+              const col = TOOL_COLOR[category] ?? "#7C3AED";
+              return (
               <motion.div
                 key={name}
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.04, duration: 0.4 }}
-                className="glass-card glass-card-hover rounded-2xl p-4 text-center flex flex-col gap-1.5"
+                className="glass-card-hover rounded-2xl p-4 text-center flex flex-col gap-1.5"
+                style={{
+                  background: `${col}0d`,
+                  border: `1px solid ${col}33`,
+                  backdropFilter: "blur(20px)",
+                  WebkitBackdropFilter: "blur(20px)",
+                  boxShadow: `0 0 20px ${col}10`,
+                }}
               >
                 <span className="font-poppins font-semibold text-sm text-white uppercase">{name}</span>
-                <span className="text-[10px] text-brand-purple font-medium uppercase">{category}</span>
+                <span className="text-[10px] font-medium uppercase" style={{ color: col }}>{category}</span>
               </motion.div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -423,7 +451,14 @@ export default function About() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
                 whileHover={{ y: -3 }}
-                className="glass-card rounded-2xl p-5 flex items-center gap-4 border border-white/07 hover:border-white/15 transition-colors group"
+                className="rounded-2xl p-5 flex items-center gap-4 hover:border-white/15 transition-all group"
+                style={{
+                  background: `${color}0d`,
+                  border: `1px solid ${color}33`,
+                  backdropFilter: "blur(20px)",
+                  WebkitBackdropFilter: "blur(20px)",
+                  boxShadow: `0 0 24px ${color}12`,
+                }}
               >
                 <div
                   className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
@@ -445,7 +480,14 @@ export default function About() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="mt-8 glass-card rounded-3xl p-8 text-center border border-brand-green/20"
+            className="mt-8 rounded-3xl p-8 text-center"
+            style={{
+              background: "rgba(37,211,102,0.06)",
+              border: "1px solid rgba(37,211,102,0.25)",
+              backdropFilter: "blur(20px)",
+              WebkitBackdropFilter: "blur(20px)",
+              boxShadow: "0 0 36px rgba(37,211,102,0.10)",
+            }}
           >
             <div className="flex items-center justify-center gap-2 mb-3">
               <span className="w-2.5 h-2.5 rounded-full bg-brand-green animate-pulse" />

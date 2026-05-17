@@ -73,12 +73,12 @@ const anim1: AnimFn = (canvas) => {
       ctx.stroke();
     }
 
-    // Left panel: output items — fill available height so ZEN G card matches
+    // Left panel: output items — fill available height exactly so nothing crops
     const iGap = small ? 2 : 3;
     const listTop = by + bh + (small ? 6 : 10);
     const bottomPad = small ? 6 : 10;
-    const availH = h - listTop - bottomPad;
-    const ih = Math.max(small ? 22 : 30, Math.floor((availH + iGap) / outputs.length) - iGap);
+    const availH = Math.max(0, h - listTop - bottomPad);
+    const ih = Math.max(10, Math.floor((availH + iGap) / outputs.length) - iGap);
     const iw = splitX - 34;
 
     const cycleIdx = Math.floor(t / 1.8);
@@ -98,21 +98,22 @@ const anim1: AnimFn = (canvas) => {
       ctx.fillStyle = col + "18"; ctx.strokeStyle = col + "55"; ctx.lineWidth = 1;
       ctx.beginPath(); ctx.roundRect(bx, iy, iw, ih, 5); ctx.fill(); ctx.stroke();
 
-      // Label — same style as PROMPT label
+      // Label + value — font sizes scale with ih so content never crops
+      const labelFs = Math.max(6, Math.round(ih * 0.28));
+      const valFs   = Math.max(7, Math.round(ih * 0.38));
       ctx.fillStyle = col + "cc";
-      ctx.font = `${small ? 7 : 9}px sans-serif`;
-      ctx.fillText(out.label.toUpperCase(), bx + 10, iy + (small ? 9 : 12));
+      ctx.font = `${labelFs}px sans-serif`;
+      ctx.fillText(out.label.toUpperCase(), bx + 10, iy + ih * 0.34);
 
-      // Value — monospace typewriter
       ctx.fillStyle = "rgba(255,255,255,0.92)";
-      ctx.font = `bold ${small ? 9 : 11}px "Courier New", monospace`;
-      ctx.fillText(out.val.slice(0, charCount2), bx + 10, iy + ih - (small ? 5 : 7));
+      ctx.font = `bold ${valFs}px "Courier New", monospace`;
+      ctx.fillText(out.val.slice(0, charCount2), bx + 10, iy + ih * 0.76);
 
       // Cursor blink
       if (stillTyping && Math.sin(t * 5) > 0) {
         const tw2 = ctx.measureText(out.val.slice(0, charCount2)).width;
         ctx.fillStyle = col;
-        ctx.fillRect(bx + 10 + tw2 + 1, iy + ih - (small ? 14 : 18), 2, small ? 10 : 12);
+        ctx.fillRect(bx + 10 + tw2 + 1, iy + ih * 0.62, 2, valFs * 1.1);
       }
       ctx.restore();
     });
@@ -188,12 +189,13 @@ const anim1: AnimFn = (canvas) => {
 const anim2: AnimFn = (canvas) => {
   const ctx = canvas.getContext("2d")!;
   let W = 0, H = 0, t = 0, raf = 0;
+  const CC2 = ["#7C3AED","#4F46E5","#3B82F6","#F97316","#10B981","#06B6D4","#EC4899","#F59E0B"];
 
   const systems = [
-    { label: "Design AI",  col: "#06B6D4", freq: 1.8, amp: 0.55, phase: 0.0, status: "Generating visuals"  },
-    { label: "Copy AI",    col: "#EC4899", freq: 2.4, amp: 0.45, phase: 0.8, status: "Writing headlines"   },
-    { label: "Motion AI",  col: "#A78BFA", freq: 1.2, amp: 0.70, phase: 1.5, status: "Rendering frames"    },
-    { label: "Code AI",    col: "#10B981", freq: 3.1, amp: 0.38, phase: 2.3, status: "Building components" },
+    { label: "DESIGN AI",  freq: 1.8, amp: 0.55, phase: 0.0 },
+    { label: "COPY AI",    freq: 2.4, amp: 0.45, phase: 0.8 },
+    { label: "MOTION AI",  freq: 1.2, amp: 0.70, phase: 1.5 },
+    { label: "CODE AI",    freq: 3.1, amp: 0.38, phase: 2.3 },
   ];
 
   const resize = () => {
@@ -224,22 +226,22 @@ const anim2: AnimFn = (canvas) => {
         ctx.strokeStyle = "rgba(255,255,255,0.06)"; ctx.lineWidth = 1;
         ctx.beginPath(); ctx.moveTo(0, ly); ctx.lineTo(w, ly); ctx.stroke();
       }
-      ctx.fillStyle = sys.col + "08"; ctx.fillRect(0, ly, w, laneH);
+      const col2 = CC2[(Math.floor(t / 1.8) + i) % CC2.length];
+      ctx.fillStyle = col2 + "0a"; ctx.fillRect(0, ly, w, laneH);
 
+      // Uppercase label — centered in left panel with brand color cycle
       const midY = ly + laneH * 0.5;
-      ctx.fillStyle = sys.col; ctx.font = `bold ${Math.round(laneH * 0.18)}px sans-serif`;
-      ctx.textBaseline = "alphabetic"; ctx.fillText(sys.label, 12, midY - 1);
+      const lfs = Math.max(9, Math.round(laneH * 0.22));
+      ctx.fillStyle = col2;
+      ctx.font = `bold ${lfs}px sans-serif`;
+      ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.shadowColor = col2; ctx.shadowBlur = 10;
+      ctx.fillText(sys.label, labelW / 2, midY);
+      ctx.shadowBlur = 0; ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
 
-      const words = sys.status.split(" ");
-      const line1 = words[0], line2 = words.slice(1).join(" ");
-      const c1 = Math.min(line1.length, Math.round(age * 10));
-      const c2 = c1 >= line1.length ? Math.min(line2.length, Math.round((age - line1.length / 10) * 10)) : 0;
-      ctx.fillStyle = "rgba(255,255,255,0.32)"; ctx.font = `${Math.round(laneH * 0.13)}px "Courier New", monospace`;
-      ctx.fillText(line1.slice(0, c1) + (c1 < line1.length && Math.sin(t * 5) > 0 ? "|" : ""), 12, midY + Math.round(laneH * 0.22));
-      if (c2 > 0 || c1 >= line1.length) ctx.fillText(line2.slice(0, c2) + (c2 < line2.length && c1 >= line1.length && Math.sin(t * 5) > 0 ? "|" : ""), 12, midY + Math.round(laneH * 0.42));
-
-      ctx.fillStyle = sys.col; ctx.globalAlpha = alpha * (0.5 + 0.5 * Math.sin(t * 3 + i));
-      ctx.beginPath(); ctx.arc(labelW - 10, midY, 4, 0, Math.PI * 2); ctx.fill();
+      // Pulsing dot
+      ctx.fillStyle = col2; ctx.globalAlpha = alpha * (0.5 + 0.5 * Math.sin(t * 3 + i));
+      ctx.beginPath(); ctx.arc(labelW - 8, midY, 3.5, 0, Math.PI * 2); ctx.fill();
       ctx.globalAlpha = alpha;
 
       ctx.fillStyle = "rgba(0,0,0,0.2)";
@@ -260,8 +262,8 @@ const anim2: AnimFn = (canvas) => {
           const py = cyW + wave * ampPx * env;
           p === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
         }
-        if (pass === 0) { ctx.strokeStyle = sys.col + "44"; ctx.lineWidth = 6; ctx.lineCap = "round"; }
-        else { ctx.strokeStyle = sys.col; ctx.lineWidth = 1.8; }
+        if (pass === 0) { ctx.strokeStyle = col2 + "44"; ctx.lineWidth = 6; ctx.lineCap = "round"; }
+        else { ctx.strokeStyle = col2; ctx.lineWidth = 1.8; }
         ctx.stroke();
       }
 
@@ -438,19 +440,23 @@ const anim4: AnimFn = (canvas) => {
     const isLaunched = cycle > 4.5;
     const countdownPhase = Math.min(1, cycle / 4.5);
     const launchPhase = isLaunched ? Math.min(1, (cycle - 4.5) / 3) : 0;
-    const rocketBaseY = h * (small ? 0.68 : 0.72);
-    const rocketX = w * (small ? 0.74 : 0.76);
+    const vsmall = w < 270;
+    const rocketBaseY = h * (vsmall ? 0.64 : small ? 0.68 : 0.72);
+    const rocketX = w * (vsmall ? 0.82 : small ? 0.76 : 0.76);
     const rocketY = isLaunched ? rocketBaseY - launchPhase * (h + 60) : rocketBaseY;
 
-    // Checklist
-    const itemH = small ? 24 : 32;
-    const itemStep = small ? 29 : 40;
-    const itemStartY = small ? 10 : 24;
-    const checkW = w * (small ? 0.56 : 0.5);
-    const checkX = small ? 12 : 20;
-    const circleR4 = small ? 7 : 9;
-    const iconCX = checkX + (small ? 10 : 14);          // icon circle center x
-    const textX = iconCX + circleR4 + (small ? 7 : 10); // generous gap after icon
+    // Checklist — width capped so it never overlaps rocket column
+    const maxCheckRight = rocketX - w * 0.08;   // leave 8% gap before rocket
+    const itemStartY = vsmall ? 8 : small ? 10 : 24;
+    const completePad = vsmall ? 18 : small ? 22 : 30;
+    const availItemsH = h - itemStartY - completePad;
+    const itemStep = Math.max(vsmall ? 20 : small ? 24 : 36, Math.floor(availItemsH / checks.length));
+    const itemH = Math.min(itemStep - 3, vsmall ? 18 : small ? 22 : 30);
+    const checkX = small ? 10 : 20;
+    const checkW = Math.min(w * (small ? 0.56 : 0.5), maxCheckRight - checkX);
+    const circleR4 = vsmall ? 6 : small ? 7 : 9;
+    const iconCX = checkX + (vsmall ? 8 : small ? 10 : 14);
+    const textX = iconCX + circleR4 + (vsmall ? 5 : small ? 7 : 10);
     const cycleIdx = Math.floor(t / 1.8);
     checks.forEach((ch, i) => {
       const itemT = countdownPhase * checks.length;
@@ -491,10 +497,10 @@ const anim4: AnimFn = (canvas) => {
       }
     });
     ctx.fillStyle = "rgba(255,255,255,0.3)"; ctx.font = `${small ? 8 : 10}px sans-serif`;
-    ctx.fillText(Math.floor(countdownPhase * checks.length) + "/" + checks.length + " complete", checkX, h - (small ? 8 : 14));
+    ctx.fillText(Math.floor(countdownPhase * checks.length) + "/" + checks.length + " complete", checkX, h - Math.round(completePad * 0.3));
 
     // Rocket
-    const rs = small ? 0.72 : 1.0;
+    const rs = vsmall ? 0.56 : small ? 0.72 : 1.0;
     ctx.save(); ctx.translate(rocketX, rocketY); ctx.scale(rs, rs);
     if (isLaunched && launchPhase < 0.95 && Math.random() < 0.5) spawnParticle(0, 28);
 
@@ -539,7 +545,7 @@ const anim4: AnimFn = (canvas) => {
     ctx.fillRect(rocketX - 6 * rs, rocketBaseY + 34 * rs, 12 * rs, h - rocketBaseY - 34 * rs);
 
     if (isLaunched) {
-      const bw = small ? 54 : 68, bh2 = small ? 20 : 26, bx = rocketX - bw / 2, by = h * (small ? 0.32 : 0.38);
+      const bw = vsmall ? 42 : small ? 54 : 68, bh2 = vsmall ? 16 : small ? 20 : 26, bx = rocketX - bw / 2, by = h * (vsmall ? 0.26 : small ? 0.32 : 0.38);
       ctx.save(); ctx.globalAlpha = Math.min(1, launchPhase * 3);
       ctx.fillStyle = "rgba(16,185,129,0.2)"; ctx.strokeStyle = COL; ctx.lineWidth = 1;
       ctx.beginPath(); ctx.roundRect(bx, by, bw, bh2, 6); ctx.fill(); ctx.stroke();

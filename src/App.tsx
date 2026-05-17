@@ -30,21 +30,23 @@ export default function App() {
       <Starfield />              {/* z-index: -10 — dark base + star warp  */}
       <CuteRobotBackground />   {/* z-index: 0  — robot + full-screen glow */}
 
-      <ScrollToTop />
-      <Navbar />
+      <div className="relative z-10 flex flex-col min-h-screen">
+        <ScrollToTop />
+        <Navbar />
 
-      <AnimatePresence mode="wait">
-        <Routes location={location} key={location.pathname}>
-          <Route path="/"          element={<Home />}      />
-          <Route path="/services"  element={<Services />}  />
-          <Route path="/portfolio" element={<Portfolio />} />
-          <Route path="/about"     element={<About />}     />
-          <Route path="/contact"   element={<Contact />}   />
-        </Routes>
-      </AnimatePresence>
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route path="/"          element={<Home />}      />
+            <Route path="/services"  element={<Services />}  />
+            <Route path="/portfolio" element={<Portfolio />} />
+            <Route path="/about"     element={<About />}     />
+            <Route path="/contact"   element={<Contact />}   />
+          </Routes>
+        </AnimatePresence>
 
-      <Footer />
-      <ChatAssistant />
+        <Footer />
+        <ChatAssistant />
+      </div>
     </div>
   );
 }

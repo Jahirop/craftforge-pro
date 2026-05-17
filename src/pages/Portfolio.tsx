@@ -7,6 +7,13 @@ import CyclingBadge from "../components/CyclingBadge";
 
 const FILTERS = ["All", "Graphic Design", "Video", "Ecommerce", "Automation"];
 
+const CATEGORY_COLOR: Record<string, string> = {
+  "Graphic Design": "#7C3AED",
+  "Video": "#4F46E5",
+  "Ecommerce": "#F97316",
+  "Automation": "#10B981",
+};
+
 const PROJECTS = [
   {
     title: "AI Brand Visual System",
@@ -113,8 +120,13 @@ export default function Portfolio() {
                 className={`px-5 py-2 rounded-full text-xs font-bold uppercase transition-all border ${
                   filter === f
                     ? "bg-brand-gradient border-transparent text-white shadow-lg shadow-brand-purple/20"
-                    : "glass-card border-white/10 text-brand-grey hover:border-brand-purple/30 hover:text-white"
+                    : "border-white/10 text-brand-grey hover:border-brand-purple/30 hover:text-white"
                 }`}
+                style={filter !== f ? {
+                  background: "rgba(255,255,255,0.04)",
+                  backdropFilter: "blur(20px)",
+                  WebkitBackdropFilter: "blur(20px)",
+                } : undefined}
               >
                 {f}
               </motion.button>
@@ -131,7 +143,9 @@ export default function Portfolio() {
               layout
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
             >
-              {filtered.map((project, i) => (
+              {filtered.map((project, i) => {
+                const col = CATEGORY_COLOR[project.category] ?? "#7C3AED";
+                return (
                 <motion.div
                   key={project.title}
                   layout
@@ -139,9 +153,16 @@ export default function Portfolio() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.92 }}
                   transition={{ duration: 0.4, delay: i * 0.05 }}
-                  className={`group glass-card glass-card-hover rounded-3xl overflow-hidden flex flex-col ${
+                  className={`group glass-card-hover rounded-3xl overflow-hidden flex flex-col ${
                     project.featured ? "md:col-span-2 lg:col-span-1" : ""
                   }`}
+                  style={{
+                    background: `${col}0d`,
+                    border: `1px solid ${col}33`,
+                    backdropFilter: "blur(20px)",
+                    WebkitBackdropFilter: "blur(20px)",
+                    boxShadow: `0 0 36px ${col}14, inset 0 0 20px ${col}06`,
+                  }}
                 >
                   {/* Image */}
                   <div className="relative overflow-hidden aspect-video">
@@ -213,7 +234,7 @@ export default function Portfolio() {
                     </a>
                   </div>
                 </motion.div>
-              ))}
+              );})}
             </motion.div>
           </AnimatePresence>
 
@@ -232,7 +253,13 @@ export default function Portfolio() {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="relative glass-card rounded-3xl p-10 md:p-14 text-center overflow-hidden border border-brand-indigo/20"
+            className="relative rounded-3xl p-10 md:p-14 text-center overflow-hidden border border-brand-indigo/20"
+            style={{
+              background: "rgba(79,70,229,0.07)",
+              backdropFilter: "blur(20px)",
+              WebkitBackdropFilter: "blur(20px)",
+              boxShadow: "0 0 40px rgba(79,70,229,0.12), inset 0 0 24px rgba(79,70,229,0.06)",
+            }}
           >
             <div className="absolute inset-0 bg-brand-indigo/5 pointer-events-none" />
             <div className="relative z-10">

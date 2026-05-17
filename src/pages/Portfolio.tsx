@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { ExternalLink, ArrowUpRight } from "lucide-react";
 import SectionHeading from "../components/SectionHeading";
 import RevealText from "../components/RevealText";
+import CyclingBadge from "../components/CyclingBadge";
 
 const FILTERS = ["All", "Graphic Design", "Video", "Ecommerce", "Automation"];
 
@@ -10,23 +11,23 @@ const PROJECTS = [
   {
     title: "AI Brand Visual System",
     category: "Graphic Design",
-    img: "https://picsum.photos/seed/brand1/800/550",
-    desc: "Complete AI-powered brand visual identity and social media creative system for India's first pure parfum luxury fragrance brand. Delivered 120+ assets in 5 days.",
+    img: "https://mir-s3-cdn-cf.behance.net/projects/404/0b2bd1239980485.Y3JvcCwxNTAwLDExNzMsMCww.png",
+    desc: "Complete AI powered brand visual identity and social media creative system for India's first pure parfum luxury fragrance brand. Delivered 120+ assets in 5 days.",
     tags: ["Brand Identity", "AI Design", "Social Media"],
-    link: "https://www.behance.net/Designer_Pro_Plus",
+    link: "https://www.behance.net/gallery/239980485/E-commerce-Listing-Pack-Amazon-A-Premium",
     featured: true,
   },
   {
     title: "AI Motion Content Pipeline",
     category: "Video",
-    img: "https://picsum.photos/seed/motion2/800/550",
-    desc: "AI-generated short-form video and motion content pipeline for luxury fragrance brand. Built reusable templates for 3 platform formats.",
+    img: "https://mir-s3-cdn-cf.behance.net/projects/404/28d30a240008013.Y3JvcCwxNTAwLDExNzMsMCww.png",
+    desc: "AI generated short form video and motion content pipeline for luxury fragrance brand. Built reusable templates for 3 platform formats.",
     tags: ["Video", "Motion", "AI Pipeline"],
-    link: "https://www.behance.net/Designer_Pro_Plus",
+    link: "https://www.behance.net/gallery/240008013/Ai-Video-Content-Suite-BB-Premium-Perfume-Ecommerce",
     featured: false,
   },
   {
-    title: "E-commerce Listing Pack — Amazon & Flipkart",
+    title: "E commerce Listing Pack Amazon & Flipkart",
     category: "Ecommerce",
     img: "https://mir-s3-cdn-cf.behance.net/projects/404/b893fa247458413.Y3JvcCwxNTAwLDExNzMsMCwyNTI.png",
     desc: "Complete AI-powered e-commerce listing pack with product visuals, infographics, and A+ content built for Amazon and Flipkart at scale.",
@@ -37,28 +38,28 @@ const PROJECTS = [
   {
     title: "AI Content Automation Pipeline",
     category: "Automation",
-    img: "https://picsum.photos/seed/auto4/800/550",
-    desc: "End-to-end n8n automation pipeline for content creation, scheduling, and multi-platform publishing. Reduced manual effort by 67%.",
+    img: "https://mir-s3-cdn-cf.behance.net/projects/404/df0e2c240005159.Y3JvcCwxMzUwLDEwNTUsMCwxMw.png",
+    desc: "End to end n8n automation pipeline for content creation, scheduling, and multi platform publishing. Reduced manual effort by 67%.",
     tags: ["n8n", "Automation", "AI Agents"],
-    link: "https://www.behance.net/Designer_Pro_Plus",
+    link: "https://www.behance.net/gallery/240005159/BB-E-commerce-Perfume-Catalog-with-Amazon-A-F",
     featured: false,
   },
   {
     title: "AI Prompt Engineering System",
     category: "Automation",
-    img: "https://picsum.photos/seed/prompt5/800/550",
+    img: "https://mir-s3-cdn-cf.behance.net/projects/404/6ecd1e247630553.Y3JvcCw5NTEsNzQ0LDIyMyww.png",
     desc: "Reusable prompt libraries and AI production systems for consistent brand visual output across all platforms and team members.",
     tags: ["Prompt Library", "AI Systems", "Workflow"],
-    link: "https://www.behance.net/Designer_Pro_Plus",
+    link: "https://www.behance.net/gallery/247630553/Craftforge-AI-Powered-Creative-Ecommerce-Website",
     featured: false,
   },
   {
-    title: "AI Print-on-Demand Design System",
+    title: "AI Print on Demand Design System",
     category: "Graphic Design",
-    img: "https://picsum.photos/seed/pod6/800/550",
-    desc: "Scalable print-on-demand design system with reusable templates and AI-assisted graphic generation across 300+ SKUs for multiple niches.",
+    img: "https://mir-s3-cdn-cf.behance.net/projects/404/4b1708216067635.Y3JvcCw1NDY1LDQyNzUsMTIxLDA.jpg",
+    desc: "Scalable print on demand design system with reusable templates and AI assisted graphic generation across 300+ SKUs for multiple niches.",
     tags: ["POD", "300+ SKUs", "Template System"],
-    link: "https://www.behance.net/Designer_Pro_Plus",
+    link: "https://www.behance.net/gallery/216067635/T-SHIRT-DESIGN",
     featured: false,
   },
 ];
@@ -82,16 +83,9 @@ export default function Portfolio() {
       <section className="py-24 px-6 md:px-12 text-center relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[250px] bg-brand-indigo/10 rounded-full blur-[100px] pointer-events-none" />
         <div className="relative max-w-3xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 bg-brand-purple/15 border border-brand-purple/25 rounded-full text-brand-purple text-[11px] font-bold uppercase tracking-widest"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-brand-purple animate-pulse" />
-            Portfolio
-          </motion.div>
+          <CyclingBadge label="Portfolio" className="mb-6" />
           <RevealText
-            text="What We've Built"
+            text="WHAT WE'VE BUILT"
             className="text-white font-poppins font-bold text-4xl md:text-6xl leading-tight justify-center mb-6"
           />
           <motion.p
@@ -101,7 +95,7 @@ export default function Portfolio() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-brand-grey text-lg leading-relaxed"
           >
-            Real work, real results. Every project below was built using AI-first methodology — faster, smarter, and at scale.
+            Real work, real results. Every project below was built using AI first methodology faster, smarter, and at scale.
           </motion.p>
         </div>
       </section>
@@ -116,7 +110,7 @@ export default function Portfolio() {
                 onClick={() => setFilter(f)}
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.97 }}
-                className={`px-5 py-2 rounded-full text-xs font-bold transition-all border ${
+                className={`px-5 py-2 rounded-full text-xs font-bold uppercase transition-all border ${
                   filter === f
                     ? "bg-brand-gradient border-transparent text-white shadow-lg shadow-brand-purple/20"
                     : "glass-card border-white/10 text-brand-grey hover:border-brand-purple/30 hover:text-white"
@@ -164,7 +158,7 @@ export default function Portfolio() {
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 px-6 py-3 bg-white text-brand-purple font-bold rounded-full text-sm hover:bg-white/90 transition-colors"
                       >
-                        View on Behance <ArrowUpRight size={15} />
+                        VIEW ON BEHANCE <ArrowUpRight size={15} />
                       </a>
                     </div>
                     {/* Category badge */}
@@ -185,7 +179,7 @@ export default function Portfolio() {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.5 }}
-                      className="font-poppins font-bold text-base md:text-lg text-white leading-tight"
+                      className="font-poppins font-bold text-base md:text-lg text-white leading-tight uppercase"
                     >
                       {project.title}
                     </motion.h3>
@@ -203,7 +197,7 @@ export default function Portfolio() {
                       {project.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="text-[10px] px-2.5 py-1 rounded-full bg-brand-purple/15 border border-brand-purple/20 text-brand-purple font-medium"
+                          className="text-[10px] px-2.5 py-1 rounded-full bg-brand-purple/15 border border-brand-purple/20 text-brand-purple font-medium uppercase"
                         >
                           {tag}
                         </span>
@@ -215,7 +209,7 @@ export default function Portfolio() {
                       rel="noopener noreferrer"
                       className="flex items-center gap-1.5 text-xs font-bold text-brand-grey hover:text-brand-purple transition-colors mt-1"
                     >
-                      <ExternalLink size={12} /> View on Behance
+                      <ExternalLink size={12} /> VIEW ON BEHANCE
                     </a>
                   </div>
                 </motion.div>
@@ -225,7 +219,7 @@ export default function Portfolio() {
 
           {filtered.length === 0 && (
             <div className="py-20 text-center text-brand-grey">
-              No projects in this category yet — check back soon!
+              No projects in this category yet check back soon!
             </div>
           )}
         </div>
@@ -244,8 +238,8 @@ export default function Portfolio() {
             <div className="relative z-10">
               <SectionHeading
                 badge="See More"
-                title="Full Portfolio on Behance"
-                subtext="Browse the complete collection of AI-powered creative work — brands, products, motion, and more."
+                title="FULL PORTFOLIO ON BEHANCE"
+                subtext="Browse the complete collection of AI powered creative work brands, products, motion, and more."
               />
               <a
                 href="https://www.behance.net/Designer_Pro_Plus"
@@ -253,7 +247,7 @@ export default function Portfolio() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-8 py-4 bg-brand-gradient rounded-full font-bold text-white shadow-xl shadow-brand-purple/30 hover:shadow-brand-purple/50 transition-shadow"
               >
-                View on Behance <ExternalLink size={16} />
+                VIEW ON BEHANCE <ExternalLink size={16} />
               </a>
             </div>
           </motion.div>

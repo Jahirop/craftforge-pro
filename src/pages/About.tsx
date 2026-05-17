@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { Link } from "react-router-dom";
 import {
@@ -33,7 +34,7 @@ const VALUES = [
   {
     icon: Zap,
     title: "Speed Without Compromise",
-    desc: "AI doesn't just make us faster — it lets us explore more ideas in the same time, so the final output is better, not just quicker.",
+    desc: "AI doesn't just make us faster it lets us explore more ideas in the same time, so the final output is better, not just quicker.",
     color: "#7C3AED",
   },
   {
@@ -44,14 +45,14 @@ const VALUES = [
   },
   {
     icon: Brain,
-    title: "Systems, Not One-Offs",
-    desc: "We build reusable AI systems, not just single deliverables — so your brand's creative engine keeps running long after the project ends.",
+    title: "Systems, Not One Offs",
+    desc: "We build reusable AI systems, not just single deliverables so your brand's creative engine keeps running long after the project ends.",
     color: "#10B981",
   },
   {
     icon: Rocket,
-    title: "AI-First, Always",
-    desc: "Every workflow, every tool, every process starts with the question: how can AI make this better? We don't bolt AI on — it's the foundation.",
+    title: "AI First, Always",
+    desc: "Every workflow, every tool, every process starts with the question: how can AI make this better? We don't bolt AI on it's the foundation.",
     color: "#3B82F6",
   },
 ];
@@ -87,6 +88,91 @@ const SOCIALS = [
   },
 ];
 
+const ROLES = [
+  { text: "AI GRAPHIC DESIGNER",   color: "#7C3AED" },
+  { text: "AI VIDEO EDITOR",        color: "#4F46E5" },
+  { text: "SOCIAL MEDIA MANAGER",   color: "#3B82F6" },
+  { text: "ECOMMERCE EXPERT",       color: "#F97316" },
+  { text: "AI AGENT BUILDER",       color: "#10B981" },
+  { text: "PROMPT ENGINEER",        color: "#06B6D4" },
+  { text: "VIBE CODE DEVELOPER",    color: "#EC4899" },
+  { text: "UI/UX DESIGNER",         color: "#F59E0B" },
+];
+
+function RoleCycler() {
+  const [index, setIndex] = useState(0);
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    if (visible) {
+      const t = setTimeout(() => setVisible(false), 2800);
+      return () => clearTimeout(t);
+    } else {
+      const t = setTimeout(() => {
+        setIndex((p) => (p + 1) % ROLES.length);
+        setVisible(true);
+      }, 600);
+      return () => clearTimeout(t);
+    }
+  }, [visible]);
+
+  const { text, color } = ROLES[index];
+  const chars = text.split("");
+  const center = (chars.length - 1) / 2;
+  const maxDist = center || 1;
+  const expandDuration = maxDist * 0.04 + 0.3;
+  const collapseDuration = maxDist * 0.03 + 0.3;
+
+  return (
+    <div className="flex justify-center lg:justify-start">
+      <div className="relative inline-flex justify-center items-center">
+        {/* Color-synced glowing frame */}
+        <motion.div
+          initial={{ scaleX: 0, opacity: 0 }}
+          animate={visible ? { scaleX: 1, opacity: 1 } : { scaleX: 0, opacity: 0 }}
+          transition={{
+            scaleX: { duration: visible ? expandDuration : collapseDuration, ease: "easeOut" },
+            opacity: { duration: 0.2, delay: visible ? 0 : collapseDuration - 0.1 },
+          }}
+          className="absolute inset-0 rounded-xl pointer-events-none"
+          style={{
+            transformOrigin: "center",
+            background: `${color}15`,
+            border: `1px solid ${color}45`,
+            boxShadow: `0 0 18px ${color}30, 0 0 40px ${color}12`,
+            backdropFilter: "blur(10px)",
+            WebkitBackdropFilter: "blur(10px)",
+            padding: "0.4rem 1.2rem",
+            margin: "-0.4rem -1.2rem",
+          }}
+        />
+        <span className="relative inline-flex justify-center font-poppins font-bold px-5 py-1.5 text-sm sm:text-base tracking-wide">
+          {chars.map((char, i) => {
+            const dist = Math.abs(i - center);
+            const xOffset = (i < center ? 8 : i > center ? -8 : 0) * (dist / maxDist);
+            return (
+              <motion.span
+                key={`${index}-${i}`}
+                initial={{ opacity: 0, x: xOffset }}
+                animate={visible ? { opacity: 1, x: 0 } : { opacity: 0, x: xOffset }}
+                transition={{
+                  duration: 0.3,
+                  delay: visible ? dist * 0.035 : (maxDist - dist) * 0.025,
+                  ease: "easeOut",
+                }}
+                className="inline-block"
+                style={{ color }}
+              >
+                {char === " " ? "\u00A0" : char}
+              </motion.span>
+            );
+          })}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 export default function About() {
   return (
     <motion.div
@@ -97,9 +183,19 @@ export default function About() {
       className="pt-[70px]"
     >
       {/* Hero */}
-      <section className="py-24 px-6 md:px-12 relative overflow-hidden">
+      <section className="pt-8 pb-24 px-6 md:px-12 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-[500px] h-[400px] bg-brand-purple/8 rounded-full blur-[120px] pointer-events-none" />
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div className="max-w-7xl mx-auto">
+        {/* Single glowing frame */}
+        <div
+          className="relative rounded-3xl p-6 sm:p-10 lg:p-14 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center"
+          style={{
+            background: "rgba(255,255,255,0.03)",
+            border: "1px solid rgba(124,58,237,0.25)",
+            boxShadow: "0 0 40px rgba(124,58,237,0.12), 0 0 80px rgba(79,70,229,0.08), inset 0 0 40px rgba(124,58,237,0.04)",
+            backdropFilter: "blur(12px)",
+          }}
+        >
           {/* Profile Illustration */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -107,7 +203,8 @@ export default function About() {
             transition={{ duration: 0.7 }}
             className="flex justify-center"
           >
-            <div className="relative w-72 h-72 md:w-80 md:h-80">
+            {/* extra bottom padding so floating badge isn't clipped on mobile */}
+            <div className="relative w-52 h-52 sm:w-64 sm:h-64 md:w-72 md:h-72">
               {/* Rotating ring */}
               <div
                 className="absolute inset-0 rounded-full p-[3px]"
@@ -119,77 +216,53 @@ export default function About() {
                 <div className="w-full h-full rounded-full bg-brand-dark" />
               </div>
 
-              {/* Inner glow */}
-              <div className="absolute inset-[6px] rounded-full bg-gradient-to-br from-brand-purple/20 to-brand-indigo/20 flex items-center justify-center overflow-hidden border border-white/10">
-                <div className="w-full h-full bg-gradient-to-br from-[#1A0A2E] to-[#0D0D1A] flex items-center justify-center">
-                  {/* Initials fallback */}
-                  <div className="text-6xl font-poppins font-bold text-gradient select-none">JS</div>
-                </div>
+              {/* Profile image */}
+              <div className="absolute inset-[6px] rounded-full overflow-hidden border border-white/10">
+                <img
+                  src="/super-pro-profile.webp"
+                  alt="Jahiruddin Sekh"
+                  className="w-full h-full object-cover"
+                />
               </div>
 
               {/* Orbiting dots */}
               {[0, 1, 2, 3].map((i) => (
                 <div
                   key={i}
-                  className="absolute top-1/2 left-1/2 w-3 h-3 rounded-full"
+                  className="absolute top-1/2 left-1/2 w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full"
                   style={{
                     background: ["#7C3AED", "#F97316", "#10B981", "#3B82F6"][i],
                     animation: `particle-orbit ${8 + i * 1.5}s linear infinite`,
                     animationDelay: `-${i * 2}s`,
-                    marginTop: "-6px",
-                    marginLeft: "-6px",
+                    marginTop: "-5px",
+                    marginLeft: "-5px",
                     boxShadow: `0 0 10px ${["#7C3AED", "#F97316", "#10B981", "#3B82F6"][i]}`,
                   }}
                 />
               ))}
 
-              {/* Badge */}
-              <motion.div
-                animate={{ y: [-4, 4, -4] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 glass-card rounded-full border border-brand-purple/30 text-xs font-bold text-brand-purple whitespace-nowrap"
-              >
-                AI Creative Strategist
-              </motion.div>
             </div>
           </motion.div>
 
           {/* Bio */}
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-5 text-center lg:text-left -mt-8">
             <div>
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 bg-brand-purple/15 border border-brand-purple/25 rounded-full text-brand-purple text-[11px] font-bold uppercase tracking-widest"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-brand-purple animate-pulse" />
-                The Founder
-              </motion.div>
               <RevealText
-                text="Jahiruddin Sekh"
-                className="text-white font-poppins font-bold text-4xl md:text-5xl mb-2"
+                text="JAHIR SEKH"
+                className="text-white font-poppins font-bold text-3xl sm:text-4xl md:text-5xl mb-2 justify-center lg:justify-start"
               />
-              <motion.p
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="text-brand-purple font-semibold text-lg"
-              >
-                AI Creative Strategist · Prompt Engineer · Vibe Code Builder
-              </motion.p>
+              <RoleCycler />
             </div>
 
-            <div className="flex flex-col gap-4 text-brand-grey text-sm md:text-base leading-relaxed">
+            <div className="flex flex-col gap-3 text-brand-grey text-sm leading-relaxed">
               <motion.p
                 initial={{ opacity: 0, y: 15 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
-                I build AI-powered creative systems for brands that want to move faster than their competition.
-                At Craftforge Pro, I've merged design thinking with cutting-edge AI tooling to deliver everything from
+                I build AI powered creative systems for brands that want to move faster than their competition.
+                At Craftforge Pro, I've merged design thinking with cutting edge AI tooling to deliver everything from
                 complete brand visual systems to fully autonomous content pipelines.
               </motion.p>
               <motion.p
@@ -198,9 +271,9 @@ export default function About() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.3 }}
               >
-                With <span className="text-white font-medium">1000+ AI-powered digital assets</span> delivered across
+                With <span className="text-white font-medium">1000+ AI powered digital assets</span> delivered across
                 6+ major marketplaces, I've seen firsthand how the right AI system can reduce creative workloads by
-                67% while improving output quality — not just quantity.
+                67% while improving output quality not just quantity.
               </motion.p>
               <motion.p
                 initial={{ opacity: 0, y: 15 }}
@@ -208,43 +281,44 @@ export default function About() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.4 }}
               >
-                My approach is always <span className="text-brand-purple font-medium">systems over one-offs</span>.
+                My approach is always <span className="text-brand-purple font-medium">systems over one offs</span>.
                 Every project I build becomes a repeatable asset your team can use long after we finish together.
               </motion.p>
             </div>
 
             {/* Skills */}
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 justify-center lg:justify-start">
               {SKILLS.slice(0, 8).map((skill, i) => (
                 <motion.span
                   key={skill}
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.4 + i * 0.05 }}
-                  className="px-3 py-1.5 glass-card rounded-full text-xs font-medium text-white/80 border border-white/10"
+                  className="px-3 py-1.5 glass-card rounded-full text-xs font-medium text-white/80 border border-white/10 uppercase"
                 >
                   {skill}
                 </motion.span>
               ))}
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 mt-2">
+            <div className="flex flex-col sm:flex-row gap-4 mt-1 justify-center lg:justify-start">
               <a
                 href="https://wa.me/919641547271"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 px-7 py-3.5 bg-brand-gradient rounded-full font-bold text-white shadow-lg shadow-brand-purple/30 hover:shadow-brand-purple/50 transition-shadow"
               >
-                <MessageCircle size={16} /> Work With Me
+                <MessageCircle size={16} /> WORK WITH ME
               </a>
               <Link
                 to="/contact"
                 className="flex items-center justify-center gap-2 px-7 py-3.5 border border-white/20 rounded-full font-bold text-white/80 hover:border-brand-purple/40 hover:text-white hover:bg-brand-purple/10 transition-all"
               >
-                Get in Touch
+                GET IN TOUCH
               </Link>
             </div>
           </div>
+        </div>
         </div>
       </section>
 
@@ -254,7 +328,7 @@ export default function About() {
         <div className="max-w-7xl mx-auto">
           <SectionHeading
             badge="Why Craftforge"
-            title="The Values We Build On"
+            title="THE VALUES WE BUILD ON"
             subtext="Four principles that shape every project, every pipeline, and every pixel we produce."
           />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -283,7 +357,7 @@ export default function About() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5 }}
-                    className="font-poppins font-bold text-lg text-white mb-2"
+                    className="font-poppins font-bold text-lg text-white mb-2 uppercase"
                   >
                     {title}
                   </motion.h3>
@@ -304,12 +378,12 @@ export default function About() {
       </section>
 
       {/* Tools */}
-      <section className="py-24 px-6 md:px-12">
+      <section className="py-24 px-6 md:px-12 relative z-10">
         <div className="max-w-7xl mx-auto">
           <SectionHeading
             badge="The Stack"
-            title="Tools We Use Daily"
-            subtext="The AI-first toolkit powering every Craftforge project."
+            title="TOOLS WE USE DAILY"
+            subtext="The AI first toolkit powering every Craftforge project."
           />
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
             {TOOLS.map(({ name, category }, i) => (
@@ -321,8 +395,8 @@ export default function About() {
                 transition={{ delay: i * 0.04, duration: 0.4 }}
                 className="glass-card glass-card-hover rounded-2xl p-4 text-center flex flex-col gap-1.5"
               >
-                <span className="font-poppins font-semibold text-sm text-white">{name}</span>
-                <span className="text-[10px] text-brand-purple font-medium">{category}</span>
+                <span className="font-poppins font-semibold text-sm text-white uppercase">{name}</span>
+                <span className="text-[10px] text-brand-purple font-medium uppercase">{category}</span>
               </motion.div>
             ))}
           </div>
@@ -330,11 +404,11 @@ export default function About() {
       </section>
 
       {/* Social Links */}
-      <section className="py-24 px-6 md:px-12">
+      <section className="py-24 px-6 md:px-12 relative z-10">
         <div className="max-w-4xl mx-auto">
           <SectionHeading
             badge="Connect"
-            title="Find Me Online"
+            title="FIND ME ONLINE"
             subtext="Follow the work, connect for collabs, or just say hi."
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -358,8 +432,8 @@ export default function About() {
                   <Icon size={20} style={{ color }} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-sm text-white">{label}</p>
-                  <p className="text-brand-grey text-xs truncate">{handle}</p>
+                  <p className="font-semibold text-sm text-white uppercase">{label}</p>
+                  <p className="text-brand-grey text-xs truncate uppercase">{handle}</p>
                 </div>
                 <ExternalLink size={14} className="text-brand-grey group-hover:text-white transition-colors flex-shrink-0" />
               </motion.a>
@@ -375,7 +449,7 @@ export default function About() {
           >
             <div className="flex items-center justify-center gap-2 mb-3">
               <span className="w-2.5 h-2.5 rounded-full bg-brand-green animate-pulse" />
-              <span className="font-poppins font-bold text-brand-green">Open to New Projects</span>
+              <span className="font-poppins font-bold text-brand-green">OPEN TO NEW PROJECTS</span>
             </div>
             <p className="text-brand-grey text-sm mb-6">
               Currently accepting new clients. Let's build something intelligent together.
@@ -387,13 +461,13 @@ export default function About() {
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 px-7 py-3 bg-brand-green text-white rounded-full font-bold hover:opacity-90 transition-opacity"
               >
-                <MessageCircle size={16} /> WhatsApp Now
+                <MessageCircle size={16} /> WHATSAPP NOW
               </a>
               <Link
                 to="/contact"
                 className="flex items-center justify-center px-7 py-3 border border-white/20 rounded-full font-bold text-white/80 hover:border-white/40 hover:text-white transition-all"
               >
-                Send a Message
+                SEND A MESSAGE
               </Link>
             </div>
           </motion.div>

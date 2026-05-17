@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
 import RevealText from "./RevealText";
+import CyclingBadge from "./CyclingBadge";
 
 interface Props {
   title: string;
@@ -12,15 +13,7 @@ export default function SectionHeading({ title, subtext, centered = true, badge 
   return (
     <div className={`mb-12 md:mb-16 ${centered ? "text-center" : ""}`}>
       {badge && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className={`inline-flex items-center gap-2 px-4 py-1.5 mb-4 bg-brand-purple/15 border border-brand-purple/25 rounded-full text-brand-purple text-[11px] font-bold uppercase tracking-widest ${centered ? "mx-auto" : ""}`}
-        >
-          <span className="w-1.5 h-1.5 rounded-full bg-brand-purple animate-pulse" />
-          {badge}
-        </motion.div>
+        <CyclingBadge label={badge} className={`mb-4 ${centered ? "mx-auto" : ""}`} />
       )}
       <RevealText
         text={title}

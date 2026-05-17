@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import SectionHeading from "../components/SectionHeading";
 import RevealText from "../components/RevealText";
+import CyclingBadge from "../components/CyclingBadge";
 
 const SERVICES_OPTIONS = [
   "AI Graphic Design",
@@ -71,7 +72,7 @@ const FAQS = [
   },
   {
     q: "Do you work with international clients?",
-    a: "Yes — we work with clients globally. Pricing is in INR but we can discuss USD/GBP equivalent for international projects.",
+    a: "Yes we work with clients globally. Pricing is in INR but we can discuss USD/GBP equivalent for international projects.",
   },
   {
     q: "What do I need to prepare before reaching out?",
@@ -79,7 +80,7 @@ const FAQS = [
   },
   {
     q: "Do you offer a free consultation?",
-    a: "Yes — the first 30-minute strategy call is always free. We'll scope your project and give honest recommendations before any commitment.",
+    a: "Yes the first 30 minute strategy call is always free. We'll scope your project and give honest recommendations before any commitment.",
   },
 ];
 
@@ -91,7 +92,7 @@ function FAQItem({ q, a }: { q: string; a: string }) {
         className="w-full flex items-center justify-between gap-4 p-5 text-left"
         onClick={() => setOpen(!open)}
       >
-        <span className="font-semibold text-sm text-white">{q}</span>
+        <span className="font-semibold text-sm text-white uppercase">{q}</span>
         <ChevronDown
           size={16}
           className={`flex-shrink-0 text-brand-purple transition-transform duration-300 ${open ? "rotate-180" : ""}`}
@@ -144,19 +145,12 @@ export default function Contact() {
       className="pt-[70px]"
     >
       {/* Hero */}
-      <section className="py-24 px-6 md:px-12 text-center relative overflow-hidden">
+      <section className="py-14 px-6 md:px-12 text-center relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[250px] bg-brand-purple/10 rounded-full blur-[100px] pointer-events-none" />
         <div className="relative max-w-2xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 bg-brand-purple/15 border border-brand-purple/25 rounded-full text-brand-purple text-[11px] font-bold uppercase tracking-widest"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-brand-purple animate-pulse" />
-            Contact
-          </motion.div>
+          <CyclingBadge label="Contact" className="mb-6" />
           <RevealText
-            text="Let's Build Something Intelligent"
+            text="LET'S BUILD SOMETHING INTELLIGENT"
             className="text-white font-poppins font-bold text-4xl md:text-6xl leading-tight justify-center mb-6"
           />
           <motion.p
@@ -166,13 +160,8 @@ export default function Contact() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-brand-grey text-lg leading-relaxed"
           >
-            Tell us about your project and we'll get back to you within hours. No fluff, just straight-to-the-point strategy.
+            Tell us about your project and we'll get back to you within hours. No fluff, just straight to the point strategy.
           </motion.p>
-          {/* Availability */}
-          <div className="flex items-center justify-center gap-2 mt-6">
-            <span className="w-2 h-2 rounded-full bg-brand-green animate-pulse" />
-            <span className="text-brand-green text-sm font-medium">Open to new clients — typically replies in 2–4 hours</span>
-          </div>
         </div>
       </section>
 
@@ -196,7 +185,7 @@ export default function Contact() {
                   <div className="w-16 h-16 rounded-full bg-brand-green/20 border border-brand-green/40 flex items-center justify-center">
                     <CheckCircle2 size={32} className="text-brand-green" />
                   </div>
-                  <h3 className="font-poppins font-bold text-2xl text-white">Message Sent!</h3>
+                  <h3 className="font-poppins font-bold text-2xl text-white">MESSAGE SENT!</h3>
                   <p className="text-brand-grey text-sm max-w-sm">
                     You've been redirected to WhatsApp with your message pre-filled. We'll follow up within a few hours.
                   </p>
@@ -204,13 +193,13 @@ export default function Contact() {
                     onClick={() => setSubmitted(false)}
                     className="px-6 py-3 border border-white/20 rounded-full text-sm font-medium hover:border-white/40 transition-colors"
                   >
-                    Send Another Message
+                    SEND ANOTHER MESSAGE
                   </button>
                 </motion.div>
               ) : (
                 <form onSubmit={handleSubmit} className="flex flex-col gap-6">
                   <RevealText
-                    text="Start a Project"
+                    text="START A PROJECT"
                     className="text-white font-poppins font-bold text-2xl mb-2"
                   />
 
@@ -290,12 +279,8 @@ export default function Contact() {
                     whileTap={{ scale: 0.98 }}
                     className="flex items-center justify-center gap-2 w-full py-4 bg-brand-gradient rounded-2xl font-bold text-white shadow-xl shadow-brand-purple/30 hover:shadow-brand-purple/50 transition-shadow"
                   >
-                    <Send size={16} /> Send via WhatsApp
+                    <Send size={16} /> SEND
                   </motion.button>
-
-                  <p className="text-brand-grey text-[11px] text-center">
-                    Your message will open in WhatsApp pre-filled and ready to send.
-                  </p>
                 </form>
               )}
             </motion.div>
@@ -310,27 +295,34 @@ export default function Contact() {
               transition={{ delay: 0.3 }}
               className="glass-card rounded-3xl p-7 border border-white/07"
             >
-              <h3 className="font-poppins font-bold text-lg text-white mb-5">Contact Info</h3>
-              <div className="flex flex-col gap-4">
-                {CONTACT_ITEMS.map(({ Icon, label, value, href, color }) => (
-                  <a
+              <h3 className="font-poppins font-bold text-lg text-white mb-5">CONTACT INFO</h3>
+              <div className="flex flex-col gap-3">
+                {CONTACT_ITEMS.map(({ Icon, label, href, color }) => (
+                  <motion.a
                     key={href}
                     href={href}
                     target={href.startsWith("mailto") ? undefined : "_blank"}
                     rel="noopener noreferrer"
-                    className="flex items-center gap-3 group"
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                    className="flex items-center justify-center gap-3 px-4 py-3 rounded-2xl font-bold text-sm text-white transition-all uppercase"
+                    style={{
+                      background: `${color}18`,
+                      border: `1px solid ${color}40`,
+                      boxShadow: `0 0 0 rgba(0,0,0,0)`,
+                    }}
+                    onMouseEnter={(e) => {
+                      (e.currentTarget as HTMLElement).style.boxShadow = `0 0 18px ${color}55, 0 0 40px ${color}20`;
+                      (e.currentTarget as HTMLElement).style.background = `${color}28`;
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLElement).style.boxShadow = `0 0 0 rgba(0,0,0,0)`;
+                      (e.currentTarget as HTMLElement).style.background = `${color}18`;
+                    }}
                   >
-                    <div
-                      className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110"
-                      style={{ background: `${color}20`, border: `1px solid ${color}40` }}
-                    >
-                      <Icon size={16} style={{ color }} />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-brand-grey">{label}</p>
-                      <p className="text-sm text-white/80 group-hover:text-white transition-colors truncate">{value}</p>
-                    </div>
-                  </a>
+                    <Icon size={16} style={{ color }} />
+                    <span>{label}</span>
+                  </motion.a>
                 ))}
               </div>
             </motion.div>
@@ -344,7 +336,7 @@ export default function Contact() {
             >
               <div className="flex items-center gap-2 mb-3">
                 <span className="w-2.5 h-2.5 rounded-full bg-brand-green animate-pulse" />
-                <span className="font-poppins font-bold text-brand-green text-sm">Currently Available</span>
+                <span className="font-poppins font-bold text-brand-green text-sm">CURRENTLY AVAILABLE</span>
               </div>
               <p className="text-brand-grey text-sm leading-relaxed mb-5">
                 Taking on new projects. Typical response time: 2–4 hours on WhatsApp.
@@ -355,42 +347,20 @@ export default function Contact() {
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 w-full py-3 bg-brand-green text-white rounded-2xl font-bold text-sm hover:opacity-90 transition-opacity"
               >
-                <MessageCircle size={16} /> Message on WhatsApp
+                <MessageCircle size={16} /> MESSAGE ON WHATSAPP
               </a>
             </motion.div>
 
-            {/* Quick Stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="glass-card rounded-3xl p-7 border border-white/07"
-            >
-              <p className="text-xs font-bold uppercase tracking-widest text-brand-grey mb-4">Why Work With Us</p>
-              {[
-                { stat: "9x", label: "Faster than traditional agencies" },
-                { stat: "< 24h", label: "Average first response time" },
-                { stat: "100%", label: "Satisfaction or refund guarantee" },
-              ].map(({ stat, label }) => (
-                <div key={stat} className="flex items-start gap-3 mb-4 last:mb-0">
-                  <CheckCircle2 size={16} className="text-brand-purple flex-shrink-0 mt-0.5" />
-                  <div>
-                    <span className="text-white font-bold text-sm">{stat}</span>
-                    <span className="text-brand-grey text-sm"> — {label}</span>
-                  </div>
-                </div>
-              ))}
-            </motion.div>
           </div>
         </div>
       </section>
 
       {/* FAQ */}
-      <section className="pb-24 px-6 md:px-12">
+      <section className="pb-24 px-6 md:px-12 relative z-10">
         <div className="max-w-2xl mx-auto">
           <SectionHeading
             badge="FAQ"
-            title="Before You Reach Out"
+            title="BEFORE YOU REACH OUT"
             subtext="Quick answers to the most common pre-project questions."
           />
           <div className="flex flex-col gap-4">

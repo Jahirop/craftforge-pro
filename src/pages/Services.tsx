@@ -7,19 +7,20 @@ import {
 import { useState } from "react";
 import SectionHeading from "../components/SectionHeading";
 import RevealText from "../components/RevealText";
+import CyclingBadge from "../components/CyclingBadge";
 
 const SERVICES = [
   {
     icon: Palette,
     title: "AI Graphic Design",
     tagline: "Brand visuals at machine speed.",
-    desc: "We turn a single prompt into a complete brand visual system. From logo concepts to campaign creatives, product graphics to social media assets — all generated, refined, and delivered at scale using the latest AI design tools.",
+    desc: "We turn a single prompt into a complete brand visual system. From logo concepts to campaign creatives, product graphics to social media assets all generated, refined, and delivered at scale using the latest AI design tools.",
     included: [
       "Brand identity & logo concepts",
       "Social media creative templates",
       "Product graphic design",
       "Campaign creative systems",
-      "AI-generated illustration sets",
+      "AI generated illustration sets",
       "Print & digital asset packs",
     ],
     color: "#7C3AED",
@@ -29,11 +30,11 @@ const SERVICES = [
     icon: Film,
     title: "AI Video & Motion",
     tagline: "Visual storytelling at scale.",
-    desc: "Short-form video, motion graphics, and animated content pipelines. We build end-to-end production systems for social media, ads, and brand storytelling — cutting production time by up to 9x.",
+    desc: "Short form video, motion graphics, and animated content pipelines. We build end to end production systems for social media, ads, and brand storytelling cutting production time by up to 9x.",
     included: [
-      "Short-form video production",
+      "Short form video production",
       "Motion graphics & animation",
-      "AI-generated video content",
+      "AI generated video content",
       "Social media video pipelines",
       "Brand storytelling reels",
       "Ad creative video systems",
@@ -45,14 +46,14 @@ const SERVICES = [
     icon: Globe,
     title: "Vibe Code & AI Websites",
     tagline: "Intelligent websites, live in days.",
-    desc: "Conversion-focused websites built with AI-assisted development. We combine vibe coding methodology with AI tooling to deliver stunning, fast, and functional websites — without the 3-month agency timeline.",
+    desc: "Conversion focused websites built with AI assisted development. We combine vibe coding methodology with AI tooling to deliver stunning, fast, and functional websites without the 3 month agency timeline.",
     included: [
       "Landing page design & development",
       "Full multi-page websites",
       "React + Tailwind component systems",
       "AI chatbot integration",
-      "SEO-optimised structure",
-      "Mobile-first responsive design",
+      "SEO optimised structure",
+      "Mobile first responsive design",
     ],
     color: "#3B82F6",
     glow: "rgba(59,130,246,0.25)",
@@ -61,7 +62,7 @@ const SERVICES = [
     icon: ShoppingBag,
     title: "Ecommerce Creative",
     tagline: "Product visuals that convert.",
-    desc: "High-converting product listings for Amazon, Shopify, Flipkart, and more. We create complete listing packs — main images, infographics, A+ content, and lifestyle visuals — powered by AI for consistency and speed.",
+    desc: "High converting product listings for Amazon, Shopify, Flipkart, and more. We create complete listing packs main images, infographics, A+ content, and lifestyle visuals powered by AI for consistency and speed.",
     included: [
       "Amazon & Flipkart listing packs",
       "Product photography enhancement",
@@ -77,13 +78,13 @@ const SERVICES = [
     icon: Settings,
     title: "AI Automation",
     tagline: "Eliminate repetitive work, permanently.",
-    desc: "We build autonomous pipelines using n8n, Make, Zapier, and AI agents that handle your repetitive creative and business workflows — so your team can focus on what matters.",
+    desc: "We build autonomous pipelines using n8n, Make, Zapier, and AI agents that handle your repetitive creative and business workflows so your team can focus on what matters.",
     included: [
       "n8n & Make workflow automation",
       "AI agent pipeline design",
       "Content scheduling automation",
       "Lead nurturing workflows",
-      "Social media auto-publishing",
+      "Social media auto publishing",
       "Data extraction & reporting",
     ],
     color: "#10B981",
@@ -92,12 +93,12 @@ const SERVICES = [
   {
     icon: Cpu,
     title: "Generative AI Systems",
-    tagline: "Production-ready AI infrastructure.",
-    desc: "We design and build reusable AI systems — prompt libraries, model pipelines, and generative workflows — that become permanent assets in your creative operation, scaling output without scaling headcount.",
+    tagline: "Production ready AI infrastructure.",
+    desc: "We design and build reusable AI systems prompt libraries, model pipelines, and generative workflows that become permanent assets in your creative operation, scaling output without scaling headcount.",
     included: [
       "Custom prompt library design",
       "Reusable AI pipeline architecture",
-      "Model fine-tuning guidance",
+      "Model fine tuning guidance",
       "Generative design systems",
       "AI content strategy frameworks",
       "Training & handover documentation",
@@ -114,7 +115,7 @@ const PRICING = [
     desc: "Perfect for solo founders and small brands getting started with AI creative.",
     features: [
       "Single deliverable project",
-      "AI-generated assets (up to 20)",
+      "AI generated assets (up to 20)",
       "1 revision round",
       "3–5 day delivery",
       "WhatsApp support",
@@ -173,7 +174,7 @@ const FAQS = [
   },
   {
     q: "What if I'm not happy with the output?",
-    a: "We include revision rounds in every project. If we're genuinely not hitting the mark, we'll work until you're satisfied — or refund, no questions asked.",
+    a: "We include revision rounds in every project. If we're genuinely not hitting the mark, we'll work until you're satisfied or refund, no questions asked.",
   },
   {
     q: "How do we get started?",
@@ -192,7 +193,7 @@ function FAQItem({ q, a }: { q: string; a: string }) {
         className="w-full flex items-center justify-between gap-4 p-6 text-left"
         onClick={() => setOpen(!open)}
       >
-        <span className="font-poppins font-semibold text-sm md:text-base text-white">{q}</span>
+        <span className="font-poppins font-semibold text-sm md:text-base text-white uppercase">{q}</span>
         <ChevronDown
           size={18}
           className={`flex-shrink-0 text-brand-purple transition-transform duration-300 ${open ? "rotate-180" : ""}`}
@@ -231,16 +232,9 @@ export default function Services() {
       <section className="py-24 px-6 md:px-12 text-center relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[300px] bg-brand-purple/10 rounded-full blur-[120px] pointer-events-none" />
         <div className="relative max-w-3xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 bg-brand-purple/15 border border-brand-purple/25 rounded-full text-brand-purple text-[11px] font-bold uppercase tracking-widest"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-brand-purple animate-pulse" />
-            Our Services
-          </motion.div>
+          <CyclingBadge label="Our Services" className="mb-6" />
           <RevealText
-            text="What We Build"
+            text="WHAT WE BUILD"
             className="text-white font-poppins font-bold text-4xl md:text-6xl leading-tight justify-center mb-6"
           />
           <motion.p
@@ -250,7 +244,7 @@ export default function Services() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-brand-grey text-lg leading-relaxed"
           >
-            Six AI-powered creative services designed to replace slow, expensive, and inconsistent traditional workflows.
+            Six AI powered creative services designed to replace slow, expensive, and inconsistent traditional workflows.
           </motion.p>
         </div>
       </section>
@@ -283,7 +277,7 @@ export default function Services() {
                   <p className="text-xs font-bold uppercase tracking-widest mb-1" style={{ color }}>{tagline}</p>
                   <RevealText
                     text={title}
-                    className="font-poppins font-bold text-2xl md:text-3xl text-white mb-3"
+                    className="font-poppins font-bold text-2xl md:text-3xl text-white mb-3 uppercase"
                   />
                   <motion.p
                     initial={{ opacity: 0, y: 15 }}
@@ -302,7 +296,7 @@ export default function Services() {
                   className="inline-flex items-center gap-2 w-fit px-6 py-3 rounded-full font-bold text-sm text-white transition-opacity hover:opacity-90"
                   style={{ background: `linear-gradient(135deg, ${color}, ${color}99)` }}
                 >
-                  <MessageCircle size={15} /> Get a Quote
+                  <MessageCircle size={15} /> GET A QUOTE
                 </a>
               </div>
               {/* Right — included list */}
@@ -310,7 +304,7 @@ export default function Services() {
                 <p className="text-xs font-bold uppercase tracking-widest text-brand-grey mb-4">What's Included</p>
                 <ul className="flex flex-col gap-3">
                   {included.map((item) => (
-                    <li key={item} className="flex items-start gap-3 text-sm text-white/80">
+                    <li key={item} className="flex items-start gap-3 text-sm text-white/80 uppercase">
                       <CheckCircle2 size={16} className="flex-shrink-0 mt-0.5" style={{ color }} />
                       {item}
                     </li>
@@ -328,7 +322,7 @@ export default function Services() {
         <div className="max-w-6xl mx-auto">
           <SectionHeading
             badge="Pricing"
-            title="Simple, Transparent Pricing"
+            title="SIMPLE, TRANSPARENT PRICING"
             subtext="No hidden fees. No hourly surprises. Just clear project scopes and fair rates."
           />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -357,7 +351,7 @@ export default function Services() {
                 </div>
                 <ul className="flex flex-col gap-3 flex-1">
                   {features.map((f) => (
-                    <li key={f} className={`flex items-start gap-2.5 text-sm ${highlight ? "text-white/90" : "text-white/70"}`}>
+                    <li key={f} className={`flex items-start gap-2.5 text-sm uppercase ${highlight ? "text-white/90" : "text-white/70"}`}>
                       <CheckCircle2 size={15} className={`flex-shrink-0 mt-0.5 ${highlight ? "text-white" : "text-brand-purple"}`} />
                       {f}
                     </li>
@@ -373,7 +367,7 @@ export default function Services() {
                       : "border border-brand-purple text-brand-purple hover:bg-brand-purple hover:text-white"
                   }`}
                 >
-                  {cta}
+                  {cta.toUpperCase()}
                 </a>
               </motion.div>
             ))}
@@ -390,11 +384,11 @@ export default function Services() {
       </section>
 
       {/* FAQ */}
-      <section className="py-24 px-6 md:px-12">
+      <section className="py-24 px-6 md:px-12 relative z-10">
         <div className="max-w-3xl mx-auto">
           <SectionHeading
             badge="FAQ"
-            title="Common Questions"
+            title="COMMON QUESTIONS"
             subtext="Everything you need to know before we start building."
           />
           <div className="flex flex-col gap-4">
@@ -415,7 +409,7 @@ export default function Services() {
             className="glass-card rounded-3xl p-12 border border-brand-purple/20"
           >
             <RevealText
-              text="Not Sure Which Service You Need?"
+              text="NOT SURE WHICH SERVICE YOU NEED?"
               className="text-white font-poppins font-bold text-3xl mb-4 justify-center"
             />
             <motion.p
@@ -432,7 +426,7 @@ export default function Services() {
                 to="/contact"
                 className="px-8 py-4 bg-brand-gradient rounded-full font-bold text-white shadow-lg shadow-brand-purple/30"
               >
-                Contact Us
+                CONTACT US
               </Link>
               <a
                 href="https://wa.me/919641547271"
@@ -440,7 +434,7 @@ export default function Services() {
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 px-8 py-4 border border-brand-green/30 rounded-full font-bold text-brand-green hover:bg-brand-green/10 transition-colors"
               >
-                <MessageCircle size={16} /> WhatsApp Us
+                <MessageCircle size={16} /> WHATSAPP US
               </a>
             </div>
           </motion.div>

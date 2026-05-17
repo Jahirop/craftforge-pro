@@ -5,9 +5,10 @@ interface Props {
   className?: string;
   delay?: number;
   stagger?: number;
+  once?: boolean;
 }
 
-export default function RevealText({ text, className = "", delay = 0, stagger = 0.02 }: Props) {
+export default function RevealText({ text, className = "", delay = 0, stagger = 0.02, once = true }: Props) {
   const words = text.split(" ");
   return (
     <div className={`flex flex-wrap gap-x-[0.3em] gap-y-0 ${className}`}>
@@ -18,7 +19,7 @@ export default function RevealText({ text, className = "", delay = 0, stagger = 
               key={ci}
               initial={{ y: "100%", opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true, margin: "-5%" }}
+              viewport={{ once, margin: "-5%" }}
               transition={{
                 duration: 0.5,
                 delay: delay + wi * 0.08 + ci * stagger,

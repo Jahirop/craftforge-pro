@@ -3,11 +3,13 @@ import { motion } from "motion/react";
 import { Link } from "react-router-dom";
 import {
   Palette, Film, Globe, ShoppingBag, Settings, Cpu,
-  ArrowRight, Zap, ChevronDown, MessageCircle,
+  Zap, ChevronDown, MessageCircle, ArrowRight,
 } from "lucide-react";
 import CountUp from "../components/CountUp";
 import RevealText from "../components/RevealText";
 import ProcessSection from "../components/ProcessSection";
+import ServiceCanvas from "../components/ServiceCanvas";
+import CyclingBadge from "../components/CyclingBadge";
 
 // Utility: hex color to rgb components string "r,g,b"
 function hexToRgb(hex: string): string {
@@ -16,48 +18,50 @@ function hexToRgb(hex: string): string {
   return `${parseInt(result[1], 16)},${parseInt(result[2], 16)},${parseInt(result[3], 16)}`;
 }
 
-const HERO_WORDS = [
-  "AI Graphic Design",
-  "Ecommerce Creative",
-  "AI Video & Motion",
-  "AI Automation",
-  "Vibe Code Websites",
-  "Generative AI Systems",
+const HERO_SERVICES = [
+  { name: "AI GRAPHIC DESIGN",       color: "#7C3AED", desc: "Brand visuals, product graphics & campaign creatives generated from single prompts at production scale." },
+  { name: "AI VIDEO & MOTION",       color: "#4F46E5", desc: "Short form video, motion content & visual storytelling pipelines built to publish at speed." },
+  { name: "SOCIAL MEDIA MANAGEMENT", color: "#3B82F6", desc: "Strategy, copy, scheduling & analytics fully AI assisted across every platform." },
+  { name: "ECOMMERCE CREATIVE",      color: "#F97316", desc: "High converting product visuals & marketplace content for Amazon, Shopify, Flipkart & beyond." },
+  { name: "AI AGENT DEVELOPMENT",    color: "#10B981", desc: "Autonomous pipelines using n8n, Make & AI agents that eliminate repetitive work permanently." },
+  { name: "PROMPT ENGINEERING",      color: "#06B6D4", desc: "Precision prompt libraries & reusable AI systems that scale your entire creative operation." },
+  { name: "VIBE CODE WEBSITES",      color: "#EC4899", desc: "Conversion focused websites built with AI assisted development live in days, not months." },
+  { name: "UI / UX DESIGN",          color: "#F59E0B", desc: "Clean, intuitive interfaces designed for clarity, engagement & conversion powered by AI workflows." },
 ];
 
 const SERVICES = [
   {
     icon: Palette,
     title: "AI Graphic Design",
-    desc: "Brand visuals, product graphics, and campaign creatives generated from single prompts — at production scale.",
+    desc: "Brand visuals, product graphics, and campaign creatives generated from single prompts at production scale.",
     color: "#7C3AED",
     glow: "rgba(124,58,237,0.3)",
   },
   {
     icon: Film,
     title: "AI Video & Motion",
-    desc: "Short-form video, motion content, and visual storytelling pipelines built to publish at speed.",
+    desc: "Short form video, motion content, and visual storytelling pipelines built to publish at speed.",
     color: "#4F46E5",
     glow: "rgba(79,70,229,0.3)",
   },
   {
     icon: Globe,
     title: "Vibe Code Websites",
-    desc: "Intelligent, conversion-focused websites built with AI-assisted development — live in days, not months.",
+    desc: "Intelligent, conversion focused websites built with AI assisted development live in days, not months.",
     color: "#3B82F6",
     glow: "rgba(59,130,246,0.3)",
   },
   {
     icon: ShoppingBag,
     title: "Ecommerce Creative",
-    desc: "High-converting product visuals and marketplace content for Amazon, Shopify, Flipkart, and beyond.",
+    desc: "High converting product visuals and marketplace content for Amazon, Shopify, Flipkart, and beyond.",
     color: "#F97316",
     glow: "rgba(249,115,22,0.3)",
   },
   {
     icon: Settings,
     title: "AI Automation",
-    desc: "Autonomous pipelines using n8n, Make, and AI agents that eliminate repetitive work — permanently.",
+    desc: "Autonomous pipelines using n8n, Make, and AI agents that eliminate repetitive work permanently.",
     color: "#10B981",
     glow: "rgba(16,185,129,0.3)",
   },
@@ -71,43 +75,117 @@ const SERVICES = [
 ];
 
 const STATS = [
-  { end: "9x", label: "Faster creative production" },
-  { end: "1000+", label: "AI-powered assets delivered" },
-  { end: "67%", label: "Manual workload reduction" },
-  { end: "6+", label: "Major marketplaces scaled" },
+  { end: "9x",    label: "Faster creative production",  color: "#7C3AED" },
+  { end: "1000+", label: "AI powered assets delivered", color: "#06B6D4" },
+  { end: "67%",   label: "Manual workload reduction",   color: "#EC4899" },
+  { end: "6+",    label: "Major marketplaces scaled",   color: "#10B981" },
 ];
 
 function HeroTypewriter() {
-  const [index, setIndex] = useState(0);
-  const [subIndex, setSubIndex] = useState(0);
-  const [reverse, setReverse] = useState(false);
-  const [pause, setPause] = useState(false);
+  const [idx, setIdx] = useState(0);
+  const [charCount, setCharCount] = useState(0);
+  const [phase, setPhase] = useState<"type" | "hold" | "erase">("type");
+
+  const service = HERO_SERVICES[idx];
+  const displayed = service.name.slice(0, charCount);
+  const showMeta = phase === "hold";
 
   useEffect(() => {
-    if (pause) return;
-    if (subIndex === HERO_WORDS[index].length + 1 && !reverse) {
-      setPause(true);
-      setTimeout(() => { setReverse(true); setPause(false); }, 1600);
-      return;
+    let timer: ReturnType<typeof setTimeout>;
+    if (phase === "type") {
+      if (charCount < service.name.length) {
+        timer = setTimeout(() => setCharCount((c) => c + 1), 62);
+      } else {
+        timer = setTimeout(() => setPhase("hold"), 200);
+      }
+    } else if (phase === "hold") {
+      timer = setTimeout(() => setPhase("erase"), 2800);
+    } else {
+      if (charCount > 0) {
+        timer = setTimeout(() => setCharCount((c) => c - 1), 28);
+      } else {
+        timer = setTimeout(() => {
+          setIdx((i) => (i + 1) % HERO_SERVICES.length);
+          setPhase("type");
+        }, 350);
+      }
     }
-    if (subIndex === 0 && reverse) {
-      setReverse(false);
-      setIndex((p) => (p + 1) % HERO_WORDS.length);
-      return;
-    }
-    const t = setTimeout(() => setSubIndex((p) => p + (reverse ? -1 : 1)), reverse ? 35 : 75);
-    return () => clearTimeout(t);
-  }, [subIndex, index, reverse, pause]);
+    return () => clearTimeout(timer);
+  }, [phase, charCount, service.name.length]);
 
   return (
-    <span className="text-brand-purple font-poppins font-semibold">
-      {HERO_WORDS[index].substring(0, subIndex)}
-      <span className="animate-pulse">|</span>
-    </span>
+    <div className="flex flex-col items-center gap-4 w-full">
+      {/* Typing row */}
+      <div className="relative inline-flex items-center justify-center">
+        {/* Color-synced glowing frame */}
+        <div
+          className="absolute inset-0 rounded-2xl pointer-events-none transition-all duration-700"
+          style={{
+            background: `${service.color}12`,
+            border: `1px solid ${service.color}45`,
+            boxShadow: `0 0 24px ${service.color}30, 0 0 56px ${service.color}12`,
+            backdropFilter: "blur(10px)",
+            WebkitBackdropFilter: "blur(10px)",
+            padding: "0.5rem 0",
+            margin: "-0.5rem 0",
+            opacity: charCount > 0 ? 1 : 0,
+          }}
+        />
+        <div className="relative flex items-center gap-3 px-6 py-2">
+          {/* Typed text + cursor */}
+          <span
+            className="font-poppins font-bold text-xl md:text-2xl tracking-wide"
+            style={{ color: service.color }}
+          >
+            {displayed}
+            <span
+              className="inline-block w-[2px] h-5 ml-0.5 rounded-sm align-middle"
+              style={{
+                background: service.color,
+                animation: "cur-blink 0.65s step-end infinite",
+              }}
+            />
+          </span>
+        </div>
+      </div>
+
+      {/* Description */}
+      <p
+        className="text-brand-grey text-sm md:text-base max-w-lg text-center leading-relaxed transition-opacity duration-500"
+        style={{ opacity: showMeta ? 1 : 0 }}
+      >
+        {service.desc}
+      </p>
+
+      {/* Counter */}
+      <p
+        className="text-[11px] font-mono text-white/30 tracking-widest transition-opacity duration-500"
+        style={{ opacity: showMeta ? 1 : 0 }}
+      >
+        {String(idx + 1).padStart(2, "0")} / {String(HERO_SERVICES.length).padStart(2, "0")}
+      </p>
+
+      {/* Dots */}
+      <div className="flex gap-1.5">
+        {HERO_SERVICES.map((s, i) => (
+          <div
+            key={i}
+            className="rounded-full transition-all duration-300"
+            style={{
+              width: i === idx ? "18px" : "6px",
+              height: "6px",
+              background: i === idx ? s.color : "rgba(255,255,255,0.2)",
+            }}
+          />
+        ))}
+      </div>
+    </div>
   );
 }
 
+
 export default function Home() {
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -124,41 +202,23 @@ export default function Home() {
 
 
         {/* Hero content */}
-        <div className="relative z-10 max-w-7xl w-full mx-auto grid md:grid-cols-2 gap-12 items-center">
-          <div className="flex flex-col gap-6 text-center md:text-left items-center md:items-start">
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 bg-brand-purple/15 border border-brand-purple/30 rounded-full text-brand-purple text-[11px] font-bold uppercase tracking-widest"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-brand-purple animate-pulse" />
-              AI-Powered Creative Studio
-            </motion.div>
+        <div className="relative z-10 max-w-4xl w-full mx-auto flex flex-col gap-6 items-center text-center">
+            <CyclingBadge label="AI-Powered Creative Studio" animate={false} />
 
             <RevealText
-              text="We Build Intelligent Brands With AI"
-              className="text-white font-poppins font-bold text-4xl sm:text-5xl md:text-6xl leading-tight tracking-tight justify-center md:justify-start"
+              text="WE BUILD INTELLIGENT BRANDS WITH AI"
+              className="text-white font-poppins font-bold text-3xl sm:text-5xl md:text-6xl leading-tight tracking-wide md:tracking-widest justify-center"
+              once={false}
             />
 
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8 }}
-              className="text-xl md:text-2xl min-h-[2rem]"
+              className="w-full"
             >
               <HeroTypewriter />
             </motion.div>
-
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.0 }}
-              className="text-brand-grey text-base md:text-lg max-w-lg leading-relaxed"
-            >
-              From one prompt to a complete brand system — faster, smarter, and at scale.
-              We merge AI with creative strategy to build brands that perform.
-            </motion.p>
 
             <motion.div
               initial={{ opacity: 0, y: 15 }}
@@ -171,7 +231,7 @@ export default function Home() {
                   to="/portfolio"
                   className="btn-electric group relative flex items-center gap-2 px-8 py-4 bg-brand-gradient rounded-full font-bold text-white transition-all overflow-hidden"
                 >
-                  See Our Work
+                  SEE OUR WORK
                   <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                 </Link>
               </span>
@@ -181,31 +241,18 @@ export default function Home() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="relative flex items-center gap-2 px-8 py-4 border border-brand-green/40 rounded-full font-bold text-brand-green hover:bg-brand-green/10 transition-all overflow-hidden"
+                  style={{
+                    background: "rgba(16,185,129,0.08)",
+                    backdropFilter: "blur(14px)",
+                    WebkitBackdropFilter: "blur(14px)",
+                    boxShadow: "0 0 20px rgba(16,185,129,0.18)",
+                  }}
                 >
                   <MessageCircle size={16} />
-                  Let's Talk
+                  LET'S TALK
                 </a>
               </span>
             </motion.div>
-
-            {/* Trust indicators */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.5 }}
-              className="flex flex-wrap items-center justify-center md:justify-start gap-6 mt-4"
-            >
-              {["9x Faster", "1000+ Assets", "6+ Marketplaces"].map((t) => (
-                <div key={t} className="flex items-center gap-2 text-sm text-brand-grey">
-                  <Zap size={12} className="text-brand-purple" />
-                  {t}
-                </div>
-              ))}
-            </motion.div>
-          </div>
-
-          {/* Right side — lightning fills this space absolutely */}
-          <div className="hidden md:block" />
         </div>
 
         <motion.div
@@ -217,173 +264,111 @@ export default function Home() {
         </motion.div>
       </section>
 
-      {/* FEATURES GRID */}
-      <section className="py-24 px-6 md:px-12 max-w-7xl mx-auto relative overflow-hidden">
-        {/* Floating particle background */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {[...Array(8)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute rounded-full"
-              style={{
-                width: `${4 + (i % 3) * 3}px`,
-                height: `${4 + (i % 3) * 3}px`,
-                left: `${10 + i * 11}%`,
-                top: `${15 + (i % 4) * 20}%`,
-                background: ["#7C3AED", "#06B6D4", "#EC4899", "#10B981", "#4F46E5", "#F97316", "#3B82F6", "#7C3AED"][i],
-                opacity: 0.15,
-                animation: `float-particle ${5 + i * 0.7}s ease-in-out infinite`,
-                animationDelay: `${i * 0.4}s`,
-              }}
+      {/* SERVICES GRID */}
+      <section className="py-20 px-6 md:px-12">
+        <div className="relative z-10 max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <CyclingBadge label="What We Build" className="mb-3" />
+            <RevealText
+              text="SIX WAYS WE ACCELERATE YOUR BRAND"
+              className="text-white font-poppins font-bold text-xl sm:text-3xl md:text-5xl leading-tight tracking-wide md:tracking-widest justify-center"
+              once={false}
             />
-          ))}
-        </div>
+            <p className="text-brand-grey mt-2 max-w-xl mx-auto text-sm">
+              End-to-end AI creative systems for brands that want to move fast, look sharp, and scale smart.
+            </p>
+          </div>
 
-        <div className="text-center mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 bg-brand-purple/15 border border-brand-purple/25 rounded-full text-brand-purple text-[11px] font-bold uppercase tracking-widest"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-brand-purple animate-pulse" />
-            What We Build
-          </motion.div>
-          <RevealText
-            text="Six Ways We Accelerate Your Brand"
-            className="text-white font-poppins font-bold text-3xl md:text-5xl leading-tight justify-center"
-          />
-          <motion.p
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-brand-grey mt-4 max-w-xl mx-auto"
-          >
-            End-to-end AI creative systems for brands that want to move fast, look sharp, and scale smart.
-          </motion.p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {SERVICES.map((s, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.08 }}
-              whileHover={{ y: -4, scale: 1.01 }}
-              className="relative p-6 rounded-2xl border overflow-hidden group cursor-pointer"
-              style={{
-                background: "rgba(255,255,255,0.03)",
-                borderColor: "rgba(255,255,255,0.07)",
-                backdropFilter: "blur(10px)",
-              }}
-            >
-              {/* Hover glow */}
-              <div
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"
-                style={{ background: `radial-gradient(ellipse at center, ${s.glow.replace("0.3", "0.08")} 0%, transparent 70%)` }}
-              />
-
-              {/* Icon with glow halo */}
-              <div className="relative w-12 h-12 mb-4 flex items-center justify-center">
-                <div
-                  className="absolute inset-0 rounded-xl"
-                  style={{ background: s.glow, filter: "blur(12px)", opacity: 0.7 }}
-                />
-                <div
-                  className="relative w-10 h-10 rounded-xl flex items-center justify-center"
-                  style={{
-                    background: `rgba(${hexToRgb(s.color)},0.15)`,
-                    border: `1px solid rgba(${hexToRgb(s.color)},0.3)`,
-                  }}
-                >
-                  <s.icon size={20} style={{ color: s.color }} />
-                </div>
-              </div>
-
-              <h3 className="font-poppins font-bold text-lg mb-2 group-hover:text-white transition-colors text-white/90">
-                {s.title}
-              </h3>
-              <p className="text-brand-grey text-sm leading-relaxed">{s.desc}</p>
-
-              <Link
-                to="/services"
-                className="mt-4 flex items-center gap-1.5 text-xs font-bold transition-colors"
-                style={{ color: s.color }}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {SERVICES.map((s, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08, duration: 0.5 }}
+                className="flex flex-col rounded-[20px] overflow-hidden border transition-all duration-300 hover:-translate-y-1"
+                style={{
+                  background: i === 5 ? "rgba(236,72,153,0.08)" : "rgba(255,255,255,0.05)",
+                  borderColor: i === 5 ? "rgba(236,72,153,0.25)" : "rgba(255,255,255,0.09)",
+                  backdropFilter: "blur(20px)",
+                  WebkitBackdropFilter: "blur(20px)",
+                  boxShadow: i === 5 ? "0 0 40px rgba(236,72,153,0.12), inset 0 0 30px rgba(236,72,153,0.05)" : "none",
+                }}
               >
-                Learn more <ArrowRight size={13} />
-              </Link>
-
-              {/* Active corner accent */}
-              <div
-                className="absolute top-0 right-0 w-12 h-12 opacity-0 group-hover:opacity-100 transition-opacity"
-                style={{ background: `radial-gradient(circle at top right, ${s.glow}, transparent)` }}
-              />
-            </motion.div>
-          ))}
+                {/* Card top */}
+                <div className="p-8">
+                  <div className="flex items-center gap-4 mb-3">
+                    <div
+                      className="w-12 h-12 rounded-xl flex-shrink-0 flex items-center justify-center"
+                      style={{ background: `rgba(${hexToRgb(s.color)},0.18)`, color: s.color }}
+                    >
+                      <s.icon size={22} />
+                    </div>
+                    <h3 className="font-poppins font-bold text-[19px] text-white tracking-tight uppercase leading-tight">{s.title}</h3>
+                  </div>
+                  <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.45)" }}>{s.desc}</p>
+                </div>
+                {/* Divider */}
+                <div className="mx-8" style={{ height: 1, background: "rgba(255,255,255,0.06)" }} />
+                {/* Canvas animation */}
+                <div className="min-h-[200px] sm:min-h-[240px] relative overflow-hidden">
+                  <ServiceCanvas index={i === 3 ? 4 : i === 4 ? 3 : i} />
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* PROCESS SECTION — animated 01→04 energy flow */}
-      <section className="py-4 relative overflow-hidden">
-        <div className="absolute inset-0 dot-pattern opacity-20 pointer-events-none" />
-        <ProcessSection />
-      </section>
+      {/* PROCESS HSCROLL */}
+      <ProcessSection />
 
       {/* STATS */}
-      <section className="py-20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-brand-gradient opacity-10" />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(124,58,237,0.15), rgba(79,70,229,0.15))" }} />
-        <div className="relative max-w-6xl mx-auto px-6 md:px-12">
-          <div className="glass-card rounded-3xl p-12 border border-brand-purple/20">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
-              {STATS.map(({ end, label }, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1, duration: 0.5 }}
-                >
-                  <CountUp end={end} label={label} />
-                </motion.div>
-              ))}
-            </div>
+      <section className="py-10 px-6 md:px-12">
+        <div className="relative z-10 max-w-6xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {STATS.map(({ end, label, color }, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.08, duration: 0.5 }}
+                className="flex flex-col items-center justify-center text-center rounded-[20px] border py-10 px-4"
+                style={{
+                  background: "rgba(255,255,255,0.05)",
+                  borderColor: `${color}33`,
+                  backdropFilter: "blur(20px)",
+                  WebkitBackdropFilter: "blur(20px)",
+                }}
+              >
+                <CountUp end={end} label={label} color={color} />
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* CTA BANNER */}
       <section className="py-24 px-6 md:px-12">
-        <div className="max-w-4xl mx-auto">
+        <div className="relative z-10 max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
-            className="relative glass-card rounded-3xl p-12 md:p-16 text-center overflow-hidden border border-brand-purple/20"
-            style={{ backdropFilter: "blur(10px)" }}
+            className="relative glass-card rounded-3xl p-7 sm:p-12 md:p-16 text-center overflow-hidden border border-brand-purple/20"
+            style={{ backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)" }}
           >
             {/* Glow */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-80 h-40 bg-brand-purple/20 rounded-full blur-3xl pointer-events-none" />
 
             <div className="relative z-10">
-              <motion.div
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.2 }}
-                className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 bg-brand-purple/15 border border-brand-purple/25 rounded-full text-brand-purple text-[11px] font-bold uppercase tracking-widest"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-brand-purple animate-pulse" />
-                Ready When You Are
-              </motion.div>
-
               <RevealText
-                text="Ready to Build Something Intelligent?"
-                className="text-white font-poppins font-bold text-3xl md:text-5xl leading-tight justify-center mb-4"
+                text="READY TO BUILD SOMETHING INTELLIGENT?"
+                className="text-white font-poppins font-bold text-2xl sm:text-3xl md:text-5xl leading-tight tracking-wide md:tracking-widest justify-center mb-4"
+                once={false}
               />
               <motion.p
                 initial={{ opacity: 0, y: 15 }}
@@ -392,30 +377,80 @@ export default function Home() {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-brand-grey text-base md:text-lg mb-10 max-w-xl mx-auto"
               >
-                Let's create your AI-powered brand system together. Fast, smart, and built to scale.
+                Let's create your AI powered brand system together. Fast, smart, and built to scale.
               </motion.p>
 
-              <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-                <span className="btn-lightning-wrap">
+              <div className="flex flex-col sm:flex-row gap-6 justify-center items-center w-full">
+                {/* Start a New Project */}
+                <motion.div
+                  whileHover={{ scale: 1.07 }}
+                  whileTap={{ scale: 0.96 }}
+                  transition={{ type: "spring", stiffness: 280, damping: 18 }}
+                  className="relative w-full sm:w-auto"
+                >
+                  <div
+                    className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-4/5 h-5 rounded-full"
+                    style={{
+                      background: "radial-gradient(ellipse,rgba(124,58,237,0.7) 0%,rgba(6,182,212,0.35) 50%,transparent 80%)",
+                      filter: "blur(8px)",
+                      animation: "btn-under-bloom 2.4s ease-in-out infinite",
+                    }}
+                  />
                   <Link
                     to="/contact"
-                    className="btn-electric relative flex items-center gap-2 px-10 py-4 bg-brand-gradient rounded-full font-bold text-white overflow-hidden"
+                    className="btn-electric relative flex items-center justify-center gap-3 px-10 py-4 bg-brand-gradient rounded-full font-bold text-white text-base overflow-hidden shadow-lg w-full sm:w-auto"
+                    style={{
+                      boxShadow: "0 0 28px rgba(124,58,237,0.45), 0 0 60px rgba(124,58,237,0.15)",
+                    }}
                   >
-                    <Zap size={16} />
-                    Start a Project
+                    <span
+                      className="absolute inset-0 rounded-full pointer-events-none"
+                      style={{
+                        background: "linear-gradient(105deg,transparent 0%,rgba(255,255,255,0.18) 45%,rgba(255,255,255,0.35) 50%,rgba(255,255,255,0.18) 55%,transparent 100%)",
+                        animation: "btn-sweep 4s ease-in-out infinite",
+                      }}
+                    />
+                    <Zap size={17} />
+                    START A NEW PROJECT
                   </Link>
-                </span>
-                <span className="btn-lightning-wrap btn-secondary btn-green">
+                </motion.div>
+
+                {/* Chat on WhatsApp */}
+                <motion.div
+                  whileHover={{ scale: 1.07 }}
+                  whileTap={{ scale: 0.96 }}
+                  transition={{ type: "spring", stiffness: 280, damping: 18 }}
+                  className="relative w-full sm:w-auto"
+                >
+                  <div
+                    className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-4/5 h-5 rounded-full"
+                    style={{
+                      background: "radial-gradient(ellipse,rgba(37,211,102,0.7) 0%,rgba(37,211,102,0.25) 50%,transparent 80%)",
+                      filter: "blur(8px)",
+                      animation: "btn-under-bloom 2.4s ease-in-out infinite",
+                    }}
+                  />
                   <a
                     href="https://wa.me/919641547271"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="relative flex items-center justify-center gap-2 px-10 py-4 border border-brand-green/40 rounded-full font-bold text-brand-green hover:bg-brand-green/10 transition-colors overflow-hidden"
+                    className="relative flex items-center justify-center gap-3 px-10 py-4 rounded-full font-bold text-white text-base overflow-hidden shadow-lg w-full sm:w-auto"
+                    style={{
+                      background: "linear-gradient(135deg,#25D366,#128C7E)",
+                      boxShadow: "0 0 28px rgba(37,211,102,0.45), 0 0 60px rgba(37,211,102,0.15)",
+                    }}
                   >
-                    <MessageCircle size={16} />
-                    Chat on WhatsApp
+                    <span
+                      className="absolute inset-0 rounded-full pointer-events-none"
+                      style={{
+                        background: "linear-gradient(105deg,transparent 0%,rgba(255,255,255,0.18) 45%,rgba(255,255,255,0.35) 50%,rgba(255,255,255,0.18) 55%,transparent 100%)",
+                        animation: "btn-sweep 4s ease-in-out infinite",
+                      }}
+                    />
+                    <MessageCircle size={17} />
+                    CHAT ON WHATSAPP
                   </a>
-                </span>
+                </motion.div>
               </div>
             </div>
           </motion.div>

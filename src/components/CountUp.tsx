@@ -3,9 +3,10 @@ import { useState, useEffect, useRef } from "react";
 interface Props {
   end: string;
   label: string;
+  color?: string;
 }
 
-export default function CountUp({ end, label }: Props) {
+export default function CountUp({ end, label, color }: Props) {
   const [count, setCount] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -36,10 +37,13 @@ export default function CountUp({ end, label }: Props) {
 
   return (
     <div ref={ref} className="flex flex-col items-center gap-2">
-      <div className="text-4xl md:text-6xl font-poppins font-bold text-gradient">
+      <div
+        className="text-4xl md:text-6xl font-poppins font-bold"
+        style={color ? { color } : undefined}
+      >
         {count}{end.replace(/[0-9]/g, "")}
       </div>
-      <div className="text-sm md:text-base text-brand-grey font-medium text-center">{label}</div>
+      <div className="text-sm md:text-base text-brand-grey font-medium text-center uppercase">{label}</div>
     </div>
   );
 }

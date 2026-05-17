@@ -1,5 +1,7 @@
 import { Routes, Route, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { AnimatePresence } from "motion/react";
+import LoadingScreen from "./components/LoadingScreen";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Starfield from "./components/Starfield";
@@ -11,13 +13,24 @@ import Portfolio from "./pages/Portfolio";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  return null;
+}
+
 export default function App() {
   const location = useLocation();
+  const [isLoading, setIsLoading] = useState(true);
+
   return (
     <div className="relative min-h-screen">
+      {isLoading && <LoadingScreen onDone={() => setIsLoading(false)} />}
+
       <Starfield />              {/* z-index: -10 — dark base + star warp  */}
       <CuteRobotBackground />   {/* z-index: 0  — robot + full-screen glow */}
 
+      <ScrollToTop />
       <Navbar />
 
       <AnimatePresence mode="wait">

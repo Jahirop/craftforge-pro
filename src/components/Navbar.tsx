@@ -1,15 +1,35 @@
 import { motion, AnimatePresence, useScroll, useTransform, useMotionTemplate } from "motion/react";
 import { Menu, X, Zap } from "lucide-react";
+
+const LogoSvg = ({ col, colNext, size = 32 }: { col: string; colNext: string; size?: number }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 32 32" fill="none" style={{ display: "block" }}>
+    <defs>
+      <linearGradient id="nav-lg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stopColor={col} />
+        <stop offset="100%" stopColor={colNext} />
+      </linearGradient>
+    </defs>
+    <rect width="32" height="32" rx="8" fill="url(#nav-lg)" />
+    <path d="M11 4 L22 4 L16 14 L21 14 L10 28 L13 17 L8 17 Z" fill="white" opacity="0.95" />
+  </svg>
+);
 import { useState, useEffect } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 
 const LOGO_WORDS = ["Craftforge", "Pro Studio", "AI Creative", "Craftforge"];
+const CYCLE_COLORS = ["#7C3AED","#4F46E5","#3B82F6","#F97316","#10B981","#06B6D4","#EC4899","#F59E0B"];
 
 const Logo = () => {
   const [index, setIndex] = useState(0);
   const [subIndex, setSubIndex] = useState(0);
   const [reverse, setReverse] = useState(false);
   const [pause, setPause] = useState(false);
+  const [colorIdx, setColorIdx] = useState(0);
+
+  useEffect(() => {
+    const ct = setInterval(() => setColorIdx((i) => (i + 1) % CYCLE_COLORS.length), 1800);
+    return () => clearInterval(ct);
+  }, []);
 
   useEffect(() => {
     if (pause) return;
@@ -33,25 +53,31 @@ const Logo = () => {
     return () => clearTimeout(t);
   }, [subIndex, index, reverse, pause]);
 
+  const col = CYCLE_COLORS[colorIdx];
+  const colNext = CYCLE_COLORS[(colorIdx + 1) % CYCLE_COLORS.length];
+
   return (
     <Link to="/" className="flex items-center gap-2 group">
-      <div className="w-8 h-8 rounded-lg bg-brand-gradient flex items-center justify-center animate-pulse-glow">
-        <Zap size={16} className="text-white" />
+      <div style={{ filter: `drop-shadow(0 0 8px ${col}88)`, transition: "filter 0.8s ease" }}>
+        <LogoSvg col={col} colNext={colNext} size={32} />
       </div>
-      <span className="font-poppins font-bold text-xl tracking-tight text-gradient">
+      <span
+        className="font-poppins font-bold text-xl tracking-tight"
+        style={{ color: col, transition: "color 0.8s ease" }}
+      >
         {LOGO_WORDS[index].substring(0, subIndex)}
-        <span className="animate-pulse text-brand-purple">|</span>
+        <span style={{ color: col, opacity: 0.7 }}>|</span>
       </span>
     </Link>
   );
 };
 
 const NAV_LINKS = [
-  { to: "/", label: "Home" },
-  { to: "/services", label: "Services" },
-  { to: "/portfolio", label: "Portfolio" },
-  { to: "/about", label: "About" },
-  { to: "/contact", label: "Contact" },
+  { to: "/", label: "HOME" },
+  { to: "/services", label: "SERVICES" },
+  { to: "/portfolio", label: "PORTFOLIO" },
+  { to: "/about", label: "ABOUT" },
+  { to: "/contact", label: "CONTACT" },
 ];
 
 export default function Navbar() {
@@ -110,7 +136,7 @@ export default function Navbar() {
           whileTap={{ scale: 0.97 }}
           className="hidden md:flex items-center gap-2 px-5 py-2 bg-brand-gradient rounded-full text-sm font-bold text-white shadow-lg shadow-brand-purple/25"
         >
-          <Zap size={14} /> Let's Build
+          <Zap size={14} /> LET'S BUILD
         </motion.a>
 
         <button className="md:hidden p-2" onClick={() => setOpen(!open)}>
@@ -152,7 +178,7 @@ export default function Navbar() {
                 rel="noopener noreferrer"
                 className="w-full py-3 bg-brand-gradient rounded-full font-bold text-center"
               >
-                Let's Build
+                LET'S BUILD
               </a>
             </motion.div>
           )}

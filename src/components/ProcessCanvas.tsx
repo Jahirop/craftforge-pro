@@ -1,12 +1,13 @@
 import { useRef, useEffect } from "react";
+import { useTheme } from "../context/ThemeContext";
 
 type Cleanup = () => void;
-type AnimFn = (canvas: HTMLCanvasElement) => Cleanup;
+type AnimFn = (canvas: HTMLCanvasElement, isDark: boolean) => Cleanup;
 
 // ─────────────────────────────────────────────────────────────────
 // 1. Brief to Prompt — prompt typing + brand card build
 // ─────────────────────────────────────────────────────────────────
-const anim1: AnimFn = (canvas) => {
+const anim1: AnimFn = (canvas, isDark) => {
   const ctx = canvas.getContext("2d")!;
   let W = 0, H = 0, t = 0, raf = 0;
   const COL = "#7C3AED";
@@ -34,13 +35,21 @@ const anim1: AnimFn = (canvas) => {
     t += 0.048;
     const small = w < 320;
 
+    // Theme vars
+    const textMain  = isDark ? "rgba(255,255,255,0.9)" : "#0F172A";
+    const lineNumCl = isDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.25)";
+    const brandBg0  = isDark ? "#1a0d2e" : "rgba(248,250,252,0.96)";
+    const brandBg1  = isDark ? "#0d1a1f" : "rgba(248,250,252,0.96)";
+    const brandBdr  = isDark ? "rgba(167,139,250,0.25)" : "rgba(124,58,237,0.20)";
+    const brandName = isDark ? "#fff" : "#0F172A";
+    const taglineCl = isDark ? "rgba(255,255,255,0.5)" : "rgba(15,23,42,0.5)";
+
     const CYCLE = 10;
     const tc = t % CYCLE;
     const promptDone = tc > 2.2;
     const charCount = Math.min(prompt.length, Math.round(tc * (prompt.length / 2.2)));
     const splitX = w * 0.52;
 
-    // Prompt box
     const bh = small ? 34 : 44;
     const bx = 12, by = 12, bw = w - 24;
     ctx.fillStyle = "rgba(124,58,237,0.09)";
@@ -52,7 +61,7 @@ const anim1: AnimFn = (canvas) => {
     ctx.font = `${small ? 7 : 9}px sans-serif`;
     ctx.fillText("PROMPT", bx + 10, by + (small ? 10 : 13));
 
-    ctx.fillStyle = "rgba(255,255,255,0.9)";
+    ctx.fillStyle = textMain;
     ctx.font = `${small ? 9 : 12}px "Courier New", monospace`;
     ctx.fillText(prompt.slice(0, charCount), bx + 10, by + (small ? 26 : 32));
 
@@ -73,7 +82,6 @@ const anim1: AnimFn = (canvas) => {
       ctx.stroke();
     }
 
-    // Left panel: output items — fill available height exactly so nothing crops
     const iGap = small ? 2 : 3;
     const listTop = by + bh + (small ? 6 : 10);
     const bottomPad = small ? 6 : 10;
@@ -89,7 +97,6 @@ const anim1: AnimFn = (canvas) => {
       const iy = listTop + i * (ih + iGap);
       const col = CYCLE_COLORS[(cycleIdx + i) % CYCLE_COLORS.length];
 
-      // Typewriter on value
       const typeAge = Math.max(0, itemAge - 0.1);
       const charCount2 = Math.min(out.val.length, Math.round(typeAge * out.val.length / 0.7));
       const stillTyping = charCount2 < out.val.length;
@@ -98,18 +105,16 @@ const anim1: AnimFn = (canvas) => {
       ctx.fillStyle = col + "18"; ctx.strokeStyle = col + "55"; ctx.lineWidth = 1;
       ctx.beginPath(); ctx.roundRect(bx, iy, iw, ih, 5); ctx.fill(); ctx.stroke();
 
-      // Label + value — font sizes scale with ih so content never crops
       const labelFs = Math.max(6, Math.round(ih * 0.28));
       const valFs   = Math.max(7, Math.round(ih * 0.38));
       ctx.fillStyle = col + "cc";
       ctx.font = `${labelFs}px sans-serif`;
       ctx.fillText(out.label.toUpperCase(), bx + 10, iy + ih * 0.34);
 
-      ctx.fillStyle = "rgba(255,255,255,0.92)";
+      ctx.fillStyle = textMain;
       ctx.font = `bold ${valFs}px "Courier New", monospace`;
       ctx.fillText(out.val.slice(0, charCount2), bx + 10, iy + ih * 0.76);
 
-      // Cursor blink
       if (stillTyping && Math.sin(t * 5) > 0) {
         const tw2 = ctx.measureText(out.val.slice(0, charCount2)).width;
         ctx.fillStyle = col;
@@ -126,9 +131,12 @@ const anim1: AnimFn = (canvas) => {
     ctx.save(); ctx.globalAlpha = brandAlpha;
 
     const bgGrd = ctx.createLinearGradient(rx, ry, rx + rw, ry + rh);
-    bgGrd.addColorStop(0, "#1a0d2e"); bgGrd.addColorStop(1, "#0d1a1f");
-    ctx.fillStyle = bgGrd; ctx.strokeStyle = "rgba(167,139,250,0.25)"; ctx.lineWidth = 1;
+    bgGrd.addColorStop(0, brandBg0); bgGrd.addColorStop(1, brandBg1);
+    ctx.fillStyle = bgGrd; ctx.strokeStyle = brandBdr; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.roundRect(rx, ry, rw, rh, 12); ctx.fill(); ctx.stroke();
+
+    // Suppress unused variable warning for lineNumCl in this scope
+    void lineNumCl;
 
     const lx = rx + rw / 2, ly = ry + rh * 0.22;
     const logoAge = Math.max(0, brandAge - 0.3);
@@ -143,19 +151,16 @@ const anim1: AnimFn = (canvas) => {
 
     const nameAge = Math.max(0, brandAge - 0.6);
     ctx.globalAlpha = brandAlpha * Math.min(1, nameAge * 2);
-    // Brand name — ZEN G with letter spacing
-    ctx.fillStyle = "#fff"; ctx.font = `bold ${Math.round(rw * (small ? 0.13 : 0.15))}px sans-serif`;
+    ctx.fillStyle = brandName; ctx.font = `bold ${Math.round(rw * (small ? 0.13 : 0.15))}px sans-serif`;
     ctx.textAlign = "center";
     (ctx as any).letterSpacing = "4px";
     ctx.fillText("ZEN G", lx, ly + rh * 0.26);
 
-    // Subtitle
     ctx.fillStyle = "rgba(167,139,250,0.65)"; ctx.font = `${Math.round(rw * (small ? 0.065 : 0.075))}px sans-serif`;
     (ctx as any).letterSpacing = "3px";
     ctx.fillText("SKINCARE", lx, ly + rh * 0.38);
     (ctx as any).letterSpacing = "0px";
 
-    // Swatches
     const swatchAge = Math.max(0, brandAge - 0.9);
     ctx.globalAlpha = brandAlpha * Math.min(1, swatchAge * 2);
     const sw = Math.round(rw * (small ? 0.09 : 0.11)), sGap2 = small ? 3 : 5;
@@ -166,10 +171,9 @@ const anim1: AnimFn = (canvas) => {
       sx += sw + sGap2;
     });
 
-    // Tagline
     const tagAge = Math.max(0, brandAge - 1.2);
     ctx.globalAlpha = brandAlpha * Math.min(1, tagAge * 2) * 0.5;
-    ctx.fillStyle = "rgba(255,255,255,0.5)"; ctx.font = `${Math.round(rw * (small ? 0.055 : 0.065))}px sans-serif`;
+    ctx.fillStyle = taglineCl; ctx.font = `${Math.round(rw * (small ? 0.055 : 0.065))}px sans-serif`;
     (ctx as any).letterSpacing = "1px";
     ctx.fillText("Clean. Honest. Gen Z.", lx, ly + rh * 0.65);
     (ctx as any).letterSpacing = "0px";
@@ -186,7 +190,7 @@ const anim1: AnimFn = (canvas) => {
 // ─────────────────────────────────────────────────────────────────
 // 2. AI Systems Activate — 4 oscilloscope lanes running in parallel
 // ─────────────────────────────────────────────────────────────────
-const anim2: AnimFn = (canvas) => {
+const anim2: AnimFn = (canvas, isDark) => {
   const ctx = canvas.getContext("2d")!;
   let W = 0, H = 0, t = 0, raf = 0;
   const CC2 = ["#7C3AED","#4F46E5","#3B82F6","#F97316","#10B981","#06B6D4","#EC4899","#F59E0B"];
@@ -210,6 +214,13 @@ const anim2: AnimFn = (canvas) => {
     ctx.clearRect(0, 0, w, h);
     t += 0.048;
 
+    // Theme vars
+    const dividerH   = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.08)";
+    const dividerV   = isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.08)";
+    const oscBg      = isDark ? "rgba(0,0,0,0.2)" : "rgba(0,0,0,0.04)";
+    const centerLine = isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.08)";
+    const scanLine   = isDark ? 0.35 : 0.20;
+
     const laneH = h / systems.length;
     const labelW = w * 0.28;
     const waveX = labelW + 6;
@@ -223,13 +234,12 @@ const anim2: AnimFn = (canvas) => {
       ctx.save(); ctx.globalAlpha = alpha;
 
       if (i > 0) {
-        ctx.strokeStyle = "rgba(255,255,255,0.06)"; ctx.lineWidth = 1;
+        ctx.strokeStyle = dividerH; ctx.lineWidth = 1;
         ctx.beginPath(); ctx.moveTo(0, ly); ctx.lineTo(w, ly); ctx.stroke();
       }
       const col2 = CC2[(Math.floor(t / 1.8) + i) % CC2.length];
       ctx.fillStyle = col2 + "0a"; ctx.fillRect(0, ly, w, laneH);
 
-      // Uppercase label — centered in left panel with brand color cycle
       const midY = ly + laneH * 0.5;
       const lfs = Math.max(9, Math.round(laneH * 0.22));
       ctx.fillStyle = col2;
@@ -239,14 +249,13 @@ const anim2: AnimFn = (canvas) => {
       ctx.fillText(sys.label, labelW / 2, midY);
       ctx.shadowBlur = 0; ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
 
-      // Pulsing dot
       ctx.fillStyle = col2; ctx.globalAlpha = alpha * (0.5 + 0.5 * Math.sin(t * 3 + i));
       ctx.beginPath(); ctx.arc(labelW - 8, midY, 3.5, 0, Math.PI * 2); ctx.fill();
       ctx.globalAlpha = alpha;
 
-      ctx.fillStyle = "rgba(0,0,0,0.2)";
+      ctx.fillStyle = oscBg;
       ctx.beginPath(); ctx.roundRect(waveX, ly + laneH * 0.12, waveW, laneH * 0.76, 4); ctx.fill();
-      ctx.strokeStyle = "rgba(255,255,255,0.05)"; ctx.lineWidth = 1;
+      ctx.strokeStyle = centerLine; ctx.lineWidth = 1;
       ctx.beginPath(); ctx.moveTo(waveX, ly + laneH * 0.5); ctx.lineTo(waveX + waveW, ly + laneH * 0.5); ctx.stroke();
 
       const cyW = ly + laneH * 0.5;
@@ -268,12 +277,12 @@ const anim2: AnimFn = (canvas) => {
       }
 
       const playX = waveX + ((t * 55) % waveW);
-      ctx.strokeStyle = "#fff"; ctx.lineWidth = 1; ctx.globalAlpha = alpha * 0.35;
+      ctx.strokeStyle = isDark ? "#fff" : "#000"; ctx.lineWidth = 1; ctx.globalAlpha = alpha * scanLine;
       ctx.beginPath(); ctx.moveTo(playX, ly + laneH * 0.12); ctx.lineTo(playX, ly + laneH * 0.88); ctx.stroke();
       ctx.restore();
     });
 
-    ctx.fillStyle = "rgba(255,255,255,0.04)";
+    ctx.fillStyle = dividerV;
     ctx.fillRect(labelW, 0, 1, h);
     raf = requestAnimationFrame(draw);
   };
@@ -286,7 +295,7 @@ const anim2: AnimFn = (canvas) => {
 // ─────────────────────────────────────────────────────────────────
 // 3. Refine & Iterate — version cycling + quality score arc
 // ─────────────────────────────────────────────────────────────────
-const anim3: AnimFn = (canvas) => {
+const anim3: AnimFn = (canvas, isDark) => {
   const ctx = canvas.getContext("2d")!;
   let W = 0, H = 0, t = 0, raf = 0;
   const COL = "#EC4899";
@@ -310,6 +319,17 @@ const anim3: AnimFn = (canvas) => {
     t += 0.048;
     const small = w < 320;
 
+    // Theme vars
+    const cardFill    = isDark ? "rgba(20,10,16,0.9)" : "rgba(255,255,255,0.95)";
+    const prevBand    = isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.04)";
+    const noteInact   = isDark ? "rgba(255,255,255,0.38)" : "rgba(15,23,42,0.4)";
+    const arcTrack    = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.10)";
+    const scoreNum    = isDark ? "#fff" : "#0F172A";
+    const qualLabel   = isDark ? "rgba(255,255,255,0.4)" : "rgba(15,23,42,0.4)";
+    const tabInactBg  = isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.04)";
+    const tabInactTxt = isDark ? "rgba(255,255,255,0.25)" : "rgba(15,23,42,0.35)";
+    const tabBdr      = isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)";
+
     const cycleT = 2.5;
     const vi = Math.floor((t / cycleT) % versions.length);
     const vProgress = (t / cycleT) % 1;
@@ -320,13 +340,12 @@ const anim3: AnimFn = (canvas) => {
     ctx.save(); ctx.globalAlpha = 1 - transAlpha * 0.6;
 
     const scoreColor = ver.score < 60 ? "#F59E0B" : ver.score < 85 ? COL : "#10B981";
-    ctx.fillStyle = "rgba(20,10,16,0.9)"; ctx.strokeStyle = scoreColor + "55"; ctx.lineWidth = 1.5;
+    ctx.fillStyle = cardFill; ctx.strokeStyle = scoreColor + "55"; ctx.lineWidth = 1.5;
     ctx.beginPath(); ctx.roundRect(cardX, cardY, cardW, cardH, 12); ctx.fill(); ctx.stroke();
 
-    // Preview band
     const prevBandH = cardH * 0.38;
     const prevBandY = cardY + 8;
-    ctx.fillStyle = "rgba(255,255,255,0.04)";
+    ctx.fillStyle = prevBand;
     ctx.beginPath(); ctx.roundRect(cardX + 8, prevBandY, cardW - 16, prevBandH, 6); ctx.fill();
 
     const shapes = vi === 0 ? 3 : vi === 1 ? 5 : 7;
@@ -349,29 +368,28 @@ const anim3: AnimFn = (canvas) => {
     const noteLineH = small ? 14 : 18;
     ver.notes.forEach((note, ni) => {
       const isGood = note.startsWith("\u2713") || ["pass","ready","improved","adjusted"].some(w => note.includes(w));
-      ctx.fillStyle = isGood ? "#10B981" : "rgba(255,255,255,0.38)";
+      ctx.fillStyle = isGood ? "#10B981" : noteInact;
       ctx.font = `${small ? 8 : 10}px sans-serif`;
       ctx.fillText((isGood ? "\u2713 " : "\u2717 ") + note, cardX + 10, textStartY + (small ? 13 : 16) + ni * noteLineH);
     });
     ctx.restore();
 
-    // Score circle
     const meterX = cardX + cardW + (small ? 10 : 16), meterW = w - meterX - (small ? 8 : 16);
     const arcStroke = small ? 6 : 8;
     const circleX = meterX + meterW / 2, circleY = h * 0.32;
     const circleR = Math.min(meterW * 0.46, h * 0.22);
 
     ctx.beginPath(); ctx.arc(circleX, circleY, circleR, Math.PI * 0.75, Math.PI * 2.25);
-    ctx.strokeStyle = "rgba(255,255,255,0.08)"; ctx.lineWidth = arcStroke; ctx.lineCap = "round"; ctx.stroke();
+    ctx.strokeStyle = arcTrack; ctx.lineWidth = arcStroke; ctx.lineCap = "round"; ctx.stroke();
 
     const prevScore = versions[Math.max(0, vi - 1)].score;
     const displayScore = ver.score - (ver.score - prevScore) * (1 - Math.min(1, vProgress * 3));
     ctx.beginPath(); ctx.arc(circleX, circleY, circleR, Math.PI * 0.75, Math.PI * 0.75 + Math.PI * 1.5 * (displayScore / 100));
     ctx.strokeStyle = scoreColor; ctx.lineWidth = arcStroke; ctx.stroke();
 
-    ctx.fillStyle = "#fff"; ctx.font = `bold ${Math.round(circleR * 0.6)}px sans-serif`;
+    ctx.fillStyle = scoreNum; ctx.font = `bold ${Math.round(circleR * 0.6)}px sans-serif`;
     ctx.textAlign = "center"; ctx.fillText(String(Math.round(displayScore)), circleX, circleY + 5);
-    ctx.fillStyle = "rgba(255,255,255,0.4)"; ctx.font = `${small ? 8 : 10}px sans-serif`;
+    ctx.fillStyle = qualLabel; ctx.font = `${small ? 8 : 10}px sans-serif`;
     ctx.fillText("QUALITY", circleX, circleY + circleR * 0.5);
 
     const tabH = small ? 18 : 22, tabGap = small ? 2 : 4;
@@ -381,10 +399,10 @@ const anim3: AnimFn = (canvas) => {
       const tabW = (meterW - tabGap * 2) / 3;
       const px = meterX + i * (tabW + tabGap), py = tabsY;
       const pc = v.score < 60 ? "#F59E0B" : v.score < 85 ? COL : "#10B981";
-      ctx.fillStyle = isActive ? pc + "33" : "rgba(255,255,255,0.04)";
-      ctx.strokeStyle = isActive ? pc : "rgba(255,255,255,0.1)"; ctx.lineWidth = 1;
+      ctx.fillStyle = isActive ? pc + "33" : tabInactBg;
+      ctx.strokeStyle = isActive ? pc : tabBdr; ctx.lineWidth = 1;
       ctx.beginPath(); ctx.roundRect(px, py, tabW, tabH, 5); ctx.fill(); ctx.stroke();
-      ctx.fillStyle = isActive ? pc : "rgba(255,255,255,0.25)";
+      ctx.fillStyle = isActive ? pc : tabInactTxt;
       ctx.font = (isActive ? "bold " : "") + `${small ? 7 : 9}px sans-serif`; ctx.textAlign = "center";
       ctx.fillText("v" + (i + 1) + " \u00b7 " + v.score + "%", px + tabW / 2, py + tabH * 0.65);
     });
@@ -404,7 +422,7 @@ const anim3: AnimFn = (canvas) => {
 // ─────────────────────────────────────────────────────────────────
 // 4. Launch Ready — rocket launch + deployment checklist
 // ─────────────────────────────────────────────────────────────────
-const anim4: AnimFn = (canvas) => {
+const anim4: AnimFn = (canvas, isDark) => {
   const ctx = canvas.getContext("2d")!;
   let W = 0, H = 0, t = 0, raf = 0;
   const COL = "#10B981";
@@ -436,6 +454,13 @@ const anim4: AnimFn = (canvas) => {
     t += 0.048;
     const small = w < 320;
 
+    // Theme vars
+    const textDone    = isDark ? "#fff" : "#0F172A";
+    const textPending = isDark ? "rgba(255,255,255,0.55)" : "rgba(15,23,42,0.55)";
+    const counterCl   = isDark ? "rgba(255,255,255,0.3)" : "rgba(15,23,42,0.4)";
+    const launchpad1  = isDark ? "#374151" : "#94A3B8";
+    const launchpad2  = isDark ? "#1F2937" : "#CBD5E1";
+
     const cycle = t % 8;
     const isLaunched = cycle > 4.5;
     const countdownPhase = Math.min(1, cycle / 4.5);
@@ -445,8 +470,7 @@ const anim4: AnimFn = (canvas) => {
     const rocketX = w * (vsmall ? 0.82 : small ? 0.76 : 0.76);
     const rocketY = isLaunched ? rocketBaseY - launchPhase * (h + 60) : rocketBaseY;
 
-    // Checklist — width capped so it never overlaps rocket column
-    const maxCheckRight = rocketX - w * 0.08;   // leave 8% gap before rocket
+    const maxCheckRight = rocketX - w * 0.08;
     const itemStartY = vsmall ? 8 : small ? 10 : 24;
     const completePad = vsmall ? 18 : small ? 22 : 30;
     const availItemsH = h - itemStartY - completePad;
@@ -466,40 +490,34 @@ const anim4: AnimFn = (canvas) => {
       const col = CYCLE_COLORS[(cycleIdx + i) % CYCLE_COLORS.length];
       const cy4 = iy + itemH / 2;
 
-      // Box with cycling color
       ctx.fillStyle = done ? col + "20" : col + "0a";
       ctx.strokeStyle = done ? col + "99" : col + "33";
       ctx.lineWidth = 1;
       ctx.beginPath(); ctx.roundRect(checkX, iy, checkW, itemH, small ? 6 : 8); ctx.fill(); ctx.stroke();
 
-      // Icon circle
       ctx.fillStyle = done ? col : col + "44";
       ctx.beginPath(); ctx.arc(iconCX, cy4, circleR4, 0, Math.PI * 2); ctx.fill();
 
-      // Checkmark or pending dot
       if (done) {
         ctx.strokeStyle = "#fff"; ctx.lineWidth = 1.6; ctx.lineCap = "round"; ctx.beginPath();
         ctx.moveTo(iconCX - 3.5, cy4); ctx.lineTo(iconCX - 1, cy4 + 3); ctx.lineTo(iconCX + 4, cy4 - 3.5); ctx.stroke();
       } else {
-        ctx.fillStyle = "rgba(255,255,255,0.3)";
+        ctx.fillStyle = isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.2)";
         ctx.beginPath(); ctx.arc(iconCX, cy4, circleR4 * 0.35, 0, Math.PI * 2); ctx.fill();
       }
 
-      // Text
-      ctx.fillStyle = done ? "#fff" : "rgba(255,255,255,0.55)";
+      ctx.fillStyle = done ? textDone : textPending;
       ctx.font = done ? `bold ${small ? 9 : 11}px sans-serif` : `${small ? 9 : 11}px sans-serif`;
       ctx.fillText(ch, textX, cy4 + (small ? 3.5 : 4.5));
 
-      // Progress bar while pending
       if (!done && partial > 0) {
         ctx.fillStyle = col + "88";
         ctx.beginPath(); ctx.roundRect(textX, iy + itemH - (small ? 4 : 5), (checkW - (textX - checkX) - 8) * partial, 2, 1); ctx.fill();
       }
     });
-    ctx.fillStyle = "rgba(255,255,255,0.3)"; ctx.font = `${small ? 8 : 10}px sans-serif`;
+    ctx.fillStyle = counterCl; ctx.font = `${small ? 8 : 10}px sans-serif`;
     ctx.fillText(Math.floor(countdownPhase * checks.length) + "/" + checks.length + " complete", checkX, h - Math.round(completePad * 0.3));
 
-    // Rocket
     const rs = vsmall ? 0.56 : small ? 0.72 : 1.0;
     ctx.save(); ctx.translate(rocketX, rocketY); ctx.scale(rs, rs);
     if (isLaunched && launchPhase < 0.95 && Math.random() < 0.5) spawnParticle(0, 28);
@@ -539,9 +557,9 @@ const anim4: AnimFn = (canvas) => {
       ctx.restore();
     }
 
-    ctx.fillStyle = "#374151";
+    ctx.fillStyle = launchpad1;
     ctx.beginPath(); ctx.roundRect(rocketX - 28 * rs, rocketBaseY + 26 * rs, 56 * rs, 8 * rs, 4); ctx.fill();
-    ctx.fillStyle = "#1F2937";
+    ctx.fillStyle = launchpad2;
     ctx.fillRect(rocketX - 6 * rs, rocketBaseY + 34 * rs, 12 * rs, h - rocketBaseY - 34 * rs);
 
     if (isLaunched) {
@@ -579,10 +597,11 @@ const ANIMS: AnimFn[] = [anim1, anim2, anim3, anim4];
 
 export default function ProcessCanvas({ index }: { index: number }) {
   const ref = useRef<HTMLCanvasElement>(null);
+  const { isDark } = useTheme();
   useEffect(() => {
     const c = ref.current;
     if (!c) return;
-    return ANIMS[index]?.(c);
-  }, [index]);
+    return ANIMS[index]?.(c, isDark);
+  }, [index, isDark]);
   return <canvas ref={ref} className="w-full h-full block" />;
 }

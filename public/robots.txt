@@ -1,0 +1,31 @@
+User-agent: *
+Allow: /
+
+# Explicitly allow AI Search Crawlers for Generative Search
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Sitemaps
+Sitemap: https://craftforge.studio/sitemap.xml
+Sitemap: https://craftforge.studio/llms.txt

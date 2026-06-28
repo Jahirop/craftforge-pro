@@ -1,0 +1,21 @@
+# Craftforge Pro Studio
+
+> Craftforge Pro is a founder-led, premium boutique creative studio that forges premium brands, packaging, and digital products for ambitious Indian and global founders. We combine global craft standards with AI-native execution, cutting creative production times by 9x and reducing manual creative workloads by 67%.
+
+## Core Details
+- **URL**: https://craftforge.studio
+- **Location**: Kolkata, West Bengal, India
+- **Founder & Lead Creative Strategist**: Jahiruddin Sekh
+- **Contact**: hello.craftforge.studio@gmail.com | +91 9641547271 (WhatsApp)
+- **Hourly/Project Range**: Starter (₹1k – ₹25k) | Growth (₹25k – ₹75k) | Enterprise (₹75k+)
+- **Core Stack**: React, Tailwind CSS, Framer Motion, Midjourney, Stable Diffusion, Runway ML, n8n, Make, Gemini API.
+
+## Navigation
+- [Home](https://craftforge.studio/) - Agency positioning, client metrics, core 4 acceleration pillars, and contact entry points.
+- [Services](https://craftforge.studio/services) - Bulleted list of inclusions for our 4 core pillars (Forge, Form, Field, Forecast), transparent pricing packages, and general studio FAQs.
+- [Portfolio](https://craftforge.studio/portfolio) - Creative work history (highlighting Midnight Queen Pure Parfum luxury fragrance branding & packaging), filterable by category with direct links to live case study showcases on Behance.
+- [About](https://craftforge.studio/about) - Bio of founder Jahiruddin Sekh, company core values, daily toolsets, and social profiles.
+- [Contact](https://craftforge.studio/contact) - Project onboarding intake form (Budget, Services, Requirements) and pre-project FAQ list.
+
+## More Information
+- [Full LLM Specification](https://craftforge.studio/llms-full.txt) - Detailed dump of all service deliverables, pricing guides, full FAQs, and case studies for deep retrieval.

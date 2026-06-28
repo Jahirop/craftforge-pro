@@ -1,12 +1,13 @@
 import { useRef, useEffect } from "react";
+import { useTheme } from "../context/ThemeContext";
 
 type Cleanup = () => void;
-type AnimFn = (canvas: HTMLCanvasElement) => Cleanup;
+type AnimFn = (canvas: HTMLCanvasElement, isDark: boolean) => Cleanup;
 
 // ─────────────────────────────────────────────────────────────────
 // 1. AI Graphic Design — orbiting shapes + palette swatches
 // ─────────────────────────────────────────────────────────────────
-const anim1: AnimFn = (canvas) => {
+const anim1: AnimFn = (canvas, _isDark) => {
   const ctx = canvas.getContext("2d")!;
   let W = 0, H = 0, t = 0, raf = 0;
   const pal = ["#8B5CF6","#A78BFA","#EC4899","#F472B6","#6366F1","#C084FC","#F9A8D4","#7C3AED"];
@@ -33,7 +34,7 @@ const anim1: AnimFn = (canvas) => {
     t += 0.080;
 
     const g = ctx.createRadialGradient(w/2, h/2, 0, w/2, h/2, 80);
-    g.addColorStop(0, "rgba(139,92,246,0.18)"); g.addColorStop(1, "rgba(0,0,0,0)");
+    g.addColorStop(0, "rgba(139,92,246,0.18)"); g.addColorStop(1, "rgba(139,92,246,0)");
     ctx.fillStyle = g; ctx.beginPath(); ctx.arc(w/2, h/2, 80, 0, Math.PI*2); ctx.fill();
 
     let sx = (w - pal.length * 32) / 2;
@@ -70,7 +71,7 @@ const anim1: AnimFn = (canvas) => {
 // ─────────────────────────────────────────────────────────────────
 // 2. AI Video & Motion — film strip + waveform
 // ─────────────────────────────────────────────────────────────────
-const anim2: AnimFn = (canvas) => {
+const anim2: AnimFn = (canvas, isDark) => {
   const ctx = canvas.getContext("2d")!;
   let W = 0, H = 0, t = 0, raf = 0, filmOffset = 0;
   const COL = "#3B82F6";
@@ -92,6 +93,7 @@ const anim2: AnimFn = (canvas) => {
     ctx.clearRect(0, 0, w, h); t += 0.080; filmOffset = (filmOffset + 2.5) % (w * 0.2);
 
     const stripH = 52, frameW = w * 0.18, frameH = 38, frameY = (stripH - frameH) / 2;
+    // Film strip is always dark (thematic)
     ctx.fillStyle = "#0f172a"; ctx.fillRect(0, 0, w, stripH);
 
     for (let x = -filmOffset; x < w; x += frameW * 0.35) {
@@ -126,7 +128,8 @@ const anim2: AnimFn = (canvas) => {
     }
 
     const prog = (t * 0.04) % 1;
-    ctx.fillStyle = "rgba(255,255,255,0.06)"; ctx.beginPath(); ctx.roundRect(20, h-14, w-40, 4, 2); ctx.fill();
+    ctx.fillStyle = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.10)";
+    ctx.beginPath(); ctx.roundRect(20, h-14, w-40, 4, 2); ctx.fill();
     ctx.fillStyle = COL; ctx.beginPath(); ctx.roundRect(20, h-14, (w-40)*prog, 4, 2); ctx.fill();
     ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(20+(w-40)*prog, h-12, 5, 0, Math.PI*2); ctx.fill();
     raf = requestAnimationFrame(draw);
@@ -139,8 +142,9 @@ const anim2: AnimFn = (canvas) => {
 
 // ─────────────────────────────────────────────────────────────────
 // 3. Vibe Code Websites — typing code + wireframe building
+// (kept dark intentionally — code editors are always dark)
 // ─────────────────────────────────────────────────────────────────
-const anim3: AnimFn = (canvas) => {
+const anim3: AnimFn = (canvas, _isDark) => {
   const ctx = canvas.getContext("2d")!;
   let W = 0, H = 0, t = 0, raf = 0, charPos = 0;
   const COL = "#06B6D4";
@@ -186,7 +190,7 @@ const anim3: AnimFn = (canvas) => {
     let cy = 28;
     lines.forEach((line, li) => {
       cy += 18;
-      ctx.fillStyle = "rgba(255,255,255,0.15)"; ctx.fillText(li + 1, 8, cy);
+      ctx.fillStyle = "rgba(255,255,255,0.15)"; ctx.fillText(String(li + 1), 8, cy);
       const startC = lines.slice(0, li).reduce((s, l) => s + l.text.length, 0);
       const show = Math.max(0, Math.min(line.text.length, charPos - startC));
       ctx.fillStyle = line.color; ctx.fillText(line.text.slice(0, show), 30, cy);
@@ -233,7 +237,7 @@ const anim3: AnimFn = (canvas) => {
 // ─────────────────────────────────────────────────────────────────
 // 4. AI Automation — n8n-style node graph
 // ─────────────────────────────────────────────────────────────────
-const anim4: AnimFn = (canvas) => {
+const anim4: AnimFn = (canvas, isDark) => {
   const ctx = canvas.getContext("2d")!;
   let W = 0, H = 0, t = 0, raf = 0;
   const COL = "#10B981";
@@ -255,15 +259,12 @@ const anim4: AnimFn = (canvas) => {
     const w = W / devicePixelRatio, h = H / devicePixelRatio;
     ctx.clearRect(0, 0, w, h); t += 0.080;
 
-    // ── Responsive node size ──
-    const nodeR  = Math.min(w, h) * 0.082;  // slightly larger
+    const nodeR  = Math.min(w, h) * 0.082;
     const partR  = Math.max(4, nodeR * 0.42);
 
-    // ── Center the graph in canvas with padding ──
     const padX = nodeR + 4, padY = nodeR + 4;
     const gw = w - padX * 2, gh = h - padY * 2;
 
-    // Node positions relative to centered graph area
     const nodes = [
       { x: padX + gw*0.08,  y: padY + gh*0.50, label: "Trigger",    color: "#10B981" },
       { x: padX + gw*0.35,  y: padY + gh*0.22, label: "AI Agent",   color: "#8B5CF6" },
@@ -273,15 +274,17 @@ const anim4: AnimFn = (canvas) => {
       { x: padX + gw*0.92,  y: padY + gh*0.50, label: "Done \u2713", color: "#10B981" },
     ];
 
-    // ── Edges ──
+    const edgeStroke = isDark ? "rgba(255,255,255,0.10)" : "rgba(0,0,0,0.15)";
+    const nodeBoxFill = isDark ? "#0D1B2A" : "rgba(255,255,255,0.95)";
+    const nodeLabelColor = isDark ? "#fff" : "#0F172A";
+
     edges.forEach(([a, b]) => {
       const na = nodes[a], nb = nodes[b], mx = (na.x + nb.x) / 2;
       ctx.beginPath(); ctx.moveTo(na.x, na.y);
       ctx.quadraticCurveTo(mx, na.y, nb.x, nb.y);
-      ctx.strokeStyle = "rgba(255,255,255,0.10)"; ctx.lineWidth = 1.5; ctx.stroke();
+      ctx.strokeStyle = edgeStroke; ctx.lineWidth = 1.5; ctx.stroke();
     });
 
-    // ── Particles ──
     particles.forEach(p => {
       p.progress = (p.progress + p.speed) % 1;
       const [a, b] = p.edge, na = nodes[a], nb = nodes[b], mx = (na.x + nb.x) / 2;
@@ -293,24 +296,20 @@ const anim4: AnimFn = (canvas) => {
       ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(px, py, partR, 0, Math.PI*2); ctx.fill();
     });
 
-    // ── Nodes ──
     nodes.forEach((n, i) => {
       const r   = nodeR * (1 + 0.06 * Math.sin(t*2 + i));
       const nw  = r * 2, nh = r * 1.3;
 
-      // Glow
       const gr = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, r * 2);
       gr.addColorStop(0, n.color + "40"); gr.addColorStop(1, "transparent");
       ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(n.x, n.y, r*2, 0, Math.PI*2); ctx.fill();
 
-      // Box
-      ctx.fillStyle = "#0D1B2A"; ctx.strokeStyle = n.color; ctx.lineWidth = 1.5;
+      ctx.fillStyle = nodeBoxFill; ctx.strokeStyle = n.color; ctx.lineWidth = 1.5;
       ctx.beginPath(); ctx.roundRect(n.x - r, n.y - nh/2, nw, nh, 8);
       ctx.fill(); ctx.stroke();
 
-      // Label
       const fontSize = Math.max(7, Math.round(r * 0.40));
-      ctx.fillStyle = "#fff"; ctx.font = `bold ${fontSize}px sans-serif`;
+      ctx.fillStyle = nodeLabelColor; ctx.font = `bold ${fontSize}px sans-serif`;
       ctx.textAlign = "center"; ctx.textBaseline = "middle";
       ctx.fillText(n.label, n.x, n.y);
       ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
@@ -327,7 +326,7 @@ const anim4: AnimFn = (canvas) => {
 // ─────────────────────────────────────────────────────────────────
 // 5. Ecommerce Creative — product cards + bar chart
 // ─────────────────────────────────────────────────────────────────
-const anim5: AnimFn = (canvas) => {
+const anim5: AnimFn = (canvas, isDark) => {
   const ctx = canvas.getContext("2d")!;
   let W = 0, H = 0, t = 0, raf = 0;
   const COL = "#F97316";
@@ -355,15 +354,21 @@ const anim5: AnimFn = (canvas) => {
     const w = W / devicePixelRatio, h = H / devicePixelRatio;
     ctx.clearRect(0, 0, w, h); t += 0.080;
 
+    // Theme vars
+    const cardBodyFill  = isDark ? "#111827" : "#ffffff";
+    const textMain      = isDark ? "#fff" : "#0F172A";
+    const textMuted     = isDark ? "rgba(255,255,255,0.5)" : "rgba(15,23,42,0.5)";
+    const badgeFill     = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.06)";
+    const barBg         = isDark ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.04)";
+    const barLabelMuted = isDark ? "rgba(255,255,255,0.45)" : "rgba(15,23,42,0.5)";
+
     const small = w < 340;
     const fs = small ? 8 : 9;
 
-    // ── Bottom: only bar labels now (platform badges move to top-right) ──
     const labelRowH = 14;
     const bottomPad = 6;
     const labelRowY = h - bottomPad - labelRowH;
 
-    // ── Layout ──
     const cardAreaW  = w * (small ? 0.47 : 0.52);
     const chartAreaW = w - cardAreaW - (small ? 6 : 10);
     const cardW      = cardAreaW * (small ? 0.90 : 0.82);
@@ -373,19 +378,14 @@ const anim5: AnimFn = (canvas) => {
     const startX     = small ? 8 : 14;
     const cardTopY   = 10;
 
-    // ── Card cycles every 2.7 s ──
     const frontIdx   = Math.floor(t / 2.7) % products.length;
-
-    // ── Color cycle ──
     const cycleIdx   = Math.floor(t / 1.8) % CARD_COLORS.length;
     const cycleColor = CARD_COLORS[cycleIdx];
     const glowAlpha  = 0.55 + 0.35 * Math.sin(t * 2);
 
-    // ── Single front card (no stack / no overlap) ──
     const p  = products[frontIdx];
     const cx = startX, cy = cardTopY;
 
-    // Glow halo
     ctx.save();
     ctx.shadowColor = cycleColor;
     ctx.shadowBlur  = 28 * glowAlpha;
@@ -394,19 +394,16 @@ const anim5: AnimFn = (canvas) => {
     ctx.beginPath(); ctx.roundRect(cx - 4, cy - 4, cardW + 8, cardH + 8, 16); ctx.fill();
     ctx.restore();
 
-    // Card body
-    ctx.fillStyle   = "#111827";
+    ctx.fillStyle   = cardBodyFill;
     ctx.strokeStyle = cycleColor + "90";
     ctx.lineWidth   = 1.5;
     ctx.shadowColor = cycleColor; ctx.shadowBlur = 12;
     ctx.beginPath(); ctx.roundRect(cx, cy, cardW, cardH, 12); ctx.fill(); ctx.stroke();
     ctx.shadowBlur  = 0;
 
-    // Image area
     ctx.fillStyle = cycleColor + "22";
     ctx.beginPath(); ctx.roundRect(cx + 10, cy + 10, cardW - 20, cardH * 0.50, 8); ctx.fill();
 
-    // BESTSELLER badge
     const badgeFontSize = small ? 6.5 : 8;
     ctx.font = `bold ${badgeFontSize}px sans-serif`;
     const badgeText = "BESTSELLER";
@@ -418,21 +415,20 @@ const anim5: AnimFn = (canvas) => {
     ctx.fillText(badgeText, cx + 10 + badgeW / 2, cy + 12 + badgeH * 0.72);
 
     ctx.textAlign = "left";
-    ctx.fillStyle = "#fff"; ctx.font = `bold ${small ? 11 : 14}px sans-serif`;
+    ctx.fillStyle = textMain; ctx.font = `bold ${small ? 11 : 14}px sans-serif`;
     ctx.fillText(p.price, cx + 10, cy + cardH * 0.68);
-    ctx.fillStyle = "rgba(255,255,255,0.5)"; ctx.font = `${small ? 7 : 9}px sans-serif`;
+    ctx.fillStyle = textMuted; ctx.font = `${small ? 7 : 9}px sans-serif`;
     ctx.fillText(p.label + " \u00B7 Flipkart \u00B7 Amazon", cx + 10, cy + cardH * 0.79);
     ctx.fillStyle = "#FCD34D"; ctx.font = `${small ? 8 : 10}px sans-serif`;
     ctx.fillText("\u2605\u2605\u2605\u2605\u2605", cx + 10, cy + cardH * 0.90);
 
-    // ── Carousel dots (inside frame, below cards) ──
     const dotR = small ? 3 : 4;
     const dotSpacing = small ? 10 : 13;
     const totalDotW = products.length * dotR * 2 + (products.length - 1) * (dotSpacing - dotR * 2);
     const dotStartX = startX + cardW / 2 - totalDotW / 2;
     products.forEach((_, di) => {
       const isActive = di === frontIdx;
-      ctx.fillStyle = isActive ? cycleColor : "rgba(255,255,255,0.22)";
+      ctx.fillStyle = isActive ? cycleColor : (isDark ? "rgba(255,255,255,0.22)" : "rgba(0,0,0,0.18)");
       ctx.beginPath();
       ctx.arc(dotStartX + di * dotSpacing, dotRowY + dotR, isActive ? dotR + 1 : dotR, 0, Math.PI * 2);
       ctx.fill();
@@ -445,7 +441,6 @@ const anim5: AnimFn = (canvas) => {
       }
     });
 
-    // ── Right column: platform badges at top, bar chart centered below ──
     const chartX   = cardAreaW + (small ? 6 : 10);
     const plats    = ["AMZ","SHY","FLK","MNT"];
     const platBadH = small ? 14 : 18;
@@ -453,10 +448,9 @@ const anim5: AnimFn = (canvas) => {
     const platTopY = 8;
     const plW2     = (chartAreaW - platGap * (plats.length - 1)) / plats.length;
 
-    // Platform badges — top of right column
     plats.forEach((pl, i) => {
       const px = chartX + i * (plW2 + platGap);
-      ctx.fillStyle = "rgba(255,255,255,0.07)";
+      ctx.fillStyle = badgeFill;
       ctx.beginPath(); ctx.roundRect(px, platTopY, plW2, platBadH, 4); ctx.fill();
       ctx.fillStyle = "rgba(249,115,22,0.9)"; ctx.font = `bold ${fs}px sans-serif`;
       ctx.textAlign = "center";
@@ -464,18 +458,16 @@ const anim5: AnimFn = (canvas) => {
     });
     ctx.textAlign = "left";
 
-    // Bar chart — vertically centered in remaining right-column space
     const barAreaTop    = platTopY + platBadH + (small ? 5 : 8);
     const barAreaBottom = labelRowY - 4;
     const barAreaH      = barAreaBottom - barAreaTop;
     const bPad          = small ? 4 : 6;
     const bW            = Math.max(4, (chartAreaW - bPad * (barData.length + 1)) / barData.length);
     const maxBarH       = barAreaH * 0.80;
-    // Centre: total used bar height vs available
-    const usedH         = maxBarH + (small ? 14 : 18); // bars + % label space
+    const usedH         = maxBarH + (small ? 14 : 18);
     const barBaseY      = barAreaTop + (barAreaH - usedH) / 2 + usedH - (small ? 2 : 4);
 
-    ctx.fillStyle = "rgba(255,255,255,0.03)";
+    ctx.fillStyle = barBg;
     ctx.beginPath(); ctx.roundRect(chartX - 3, barAreaTop - 3, chartAreaW + 3, barAreaH + 6, 6); ctx.fill();
 
     barData.forEach((b, i) => {
@@ -485,11 +477,9 @@ const anim5: AnimFn = (canvas) => {
       gr.addColorStop(0, b.col); gr.addColorStop(1, b.col + "44");
       ctx.fillStyle = gr;
       ctx.beginPath(); ctx.roundRect(bx, by, bW, animH, [3, 3, 0, 0]); ctx.fill();
-      // % label above bar
-      ctx.fillStyle = "#fff"; ctx.font = `bold ${fs}px sans-serif`; ctx.textAlign = "center";
+      ctx.fillStyle = textMain; ctx.font = `bold ${fs}px sans-serif`; ctx.textAlign = "center";
       ctx.fillText(Math.round(b.val * 100) + "%", bx + bW / 2, by - 2);
-      // bar label at bottom row
-      ctx.fillStyle = "rgba(255,255,255,0.45)"; ctx.font = `${fs}px sans-serif`;
+      ctx.fillStyle = barLabelMuted; ctx.font = `${fs}px sans-serif`;
       ctx.fillText(b.label, bx + bW / 2, labelRowY + labelRowH - 2);
     });
     ctx.textAlign = "left";
@@ -504,17 +494,12 @@ const anim5: AnimFn = (canvas) => {
 // ─────────────────────────────────────────────────────────────────
 // 6. Generative AI Systems — neural net + prompt ticker
 // ─────────────────────────────────────────────────────────────────
-const anim6: AnimFn = (canvas) => {
+const anim6: AnimFn = (canvas, isDark) => {
   const ctx = canvas.getContext("2d")!;
   let W = 0, H = 0, t = 0, raf = 0;
   const COL = "#EC4899";
 
   type Node = { x: number; y: number; layer: number; node: number };
-  const getNet = (w: number, h: number): Node[][] =>
-    [[.12],[.28,.28,.28],[.48,.48,.48,.48],[.68,.68,.68],[.85]]
-    .map((xs, li) => xs.map((x, ni) => ({
-      x: x * w, y: h * (0.15 + (ni+0.5) * (0.7/xs.length)), layer: li, node: ni,
-    })));
 
   type Particle = { from: Node; to: Node; progress: number; speed: number };
   const particles: Particle[] = [];
@@ -538,17 +523,19 @@ const anim6: AnimFn = (canvas) => {
     const w = W / devicePixelRatio, h = H / devicePixelRatio;
     ctx.clearRect(0, 0, w, h); t += 0.080;
 
+    // Theme vars
+    const nodeFill    = isDark ? "#1a0a14" : "rgba(255,255,255,0.92)";
+    const promptBarBg = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)";
+
     const small   = w < 340;
     const fs      = small ? 8 : 10;
     const nodeR   = Math.min(w, h) * (small ? 0.032 : 0.038);
     const partR   = Math.max(3, nodeR * 0.55);
 
-    // ── Reserved zones ──
-    const promptH  = small ? 28 : 34;   // prompt bar height at bottom
+    const promptH  = small ? 28 : 34;
     const padTop   = 10;
-    const padSide  = small ? 14 : 20;   // horizontal padding for edge labels
+    const padSide  = small ? 14 : 20;
 
-    // ── Net area (centered) ──
     const netX1   = padSide + nodeR;
     const netX2   = w - padSide - nodeR;
     const netY1   = padTop + nodeR;
@@ -556,9 +543,7 @@ const anim6: AnimFn = (canvas) => {
     const netW    = netX2 - netX1;
     const netH    = netY2 - netY1;
 
-    // Layer x positions (5 layers)
     const layerXs = [0, 0.25, 0.5, 0.75, 1].map(f => netX1 + f * netW);
-    // Node counts per layer
     const layerCounts = [1, 3, 4, 3, 1];
 
     const getNetCentered = (): Node[][] =>
@@ -574,7 +559,6 @@ const anim6: AnimFn = (canvas) => {
     const net = getNetCentered();
     if (Math.random() < 0.12) spawnParticle(net);
 
-    // ── Connections ──
     for (let l = 0; l < net.length - 1; l++) {
       net[l].forEach(a => net[l+1].forEach(b => {
         ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
@@ -583,7 +567,6 @@ const anim6: AnimFn = (canvas) => {
       }));
     }
 
-    // ── Particles ──
     for (let i = particles.length - 1; i >= 0; i--) {
       const p = particles[i]; p.progress += p.speed;
       if (p.progress >= 1) { particles.splice(i, 1); continue; }
@@ -594,14 +577,13 @@ const anim6: AnimFn = (canvas) => {
       ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(px, py, partR, 0, Math.PI*2); ctx.fill();
     }
 
-    // ── Nodes ──
     net.forEach((layer, li) => layer.forEach((n, ni) => {
       const r       = nodeR * (1 + 0.08 * Math.sin(t*1.8 + li*1.2 + ni*0.7));
       const isEdge  = li === 0 || li === net.length - 1;
       const gr = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, r*2.2);
       gr.addColorStop(0, "rgba(236,72,153,0.2)"); gr.addColorStop(1, "transparent");
       ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(n.x, n.y, r*2.2, 0, Math.PI*2); ctx.fill();
-      ctx.fillStyle = "#1a0a14";
+      ctx.fillStyle = nodeFill;
       ctx.strokeStyle = isEdge ? COL : "rgba(236,72,153,0.5)";
       ctx.lineWidth = isEdge ? 2 : 1;
       ctx.beginPath(); ctx.arc(n.x, n.y, r, 0, Math.PI*2); ctx.fill(); ctx.stroke();
@@ -609,7 +591,6 @@ const anim6: AnimFn = (canvas) => {
       ctx.beginPath(); ctx.arc(n.x, n.y, r*0.35, 0, Math.PI*2); ctx.fill();
     }));
 
-    // ── Edge labels — centered above their node ──
     net.forEach((layer, li) => {
       if (li === 0 || li === net.length - 1) {
         const n     = layer[0];
@@ -622,17 +603,15 @@ const anim6: AnimFn = (canvas) => {
     });
     ctx.textAlign = "left";
 
-    // ── Prompt ticker — centered, anchored to bottom ──
     const prompts = ["Generate brand visuals...","Create motion graphics...","Build AI pipeline...","Scale production..."];
     const pidx    = Math.floor(t / 3) % prompts.length;
     const ci      = Math.floor((t % 3) / 3 * prompts[pidx].length * 1.3);
     const barX    = padSide, barW = w - padSide * 2;
     const barY    = h - promptH + 4, barH = promptH - 8;
 
-    ctx.fillStyle = "rgba(255,255,255,0.06)";
+    ctx.fillStyle = promptBarBg;
     ctx.beginPath(); ctx.roundRect(barX, barY, barW, barH, 6); ctx.fill();
 
-    // Pink left accent line
     ctx.fillStyle = COL;
     ctx.beginPath(); ctx.roundRect(barX, barY, 3, barH, [3,0,0,3]); ctx.fill();
 
@@ -662,10 +641,11 @@ const ANIMS: AnimFn[] = [anim1, anim2, anim3, anim4, anim5, anim6];
 
 export default function ServiceCanvas({ index }: { index: number }) {
   const ref = useRef<HTMLCanvasElement>(null);
+  const { isDark } = useTheme();
   useEffect(() => {
     const c = ref.current;
     if (!c) return;
-    return ANIMS[index]?.(c);
-  }, [index]);
+    return ANIMS[index]?.(c, isDark);
+  }, [index, isDark]);
   return <canvas ref={ref} className="w-full h-full block" />;
 }

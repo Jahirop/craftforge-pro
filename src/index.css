@@ -15,17 +15,54 @@
   --color-brand-border: rgba(255,255,255,0.07);
 }
 
+/* ── Theme CSS Variables ───────────────────────────────── */
+:root {
+  --th-bg:          #07070F;
+  --th-surface:     rgba(13,13,26,0.92);
+  --th-text:        #ffffff;
+  --th-text-muted:  #94A3B8;
+  --th-border:      rgba(255,255,255,0.07);
+  --th-card-bg:     rgba(255,255,255,0.04);
+  --th-nav-bg:      rgba(7,7,15,0.55);
+  --th-nav-border:  rgba(255,255,255,0.10);
+  --th-footer-bg:   rgba(7,7,15,0.80);
+  --th-scroll-trk:  #07070F;
+  --th-scroll-tmb:  #7C3AED;
+  --th-dot-pattern: rgba(255,255,255,0.06);
+  --th-body-radial: rgba(124, 58, 237, 0.15);
+}
+
+[data-theme="light"] {
+  --th-bg:          #F1F5F9;
+  --th-surface:     #ffffff;
+  --th-text:        #0F172A;
+  --th-text-muted:  #64748B;
+  --th-border:      rgba(0,0,0,0.08);
+  --th-card-bg:     rgba(255,255,255,0.85);
+  --th-nav-bg:      rgba(248,249,255,0.92);
+  --th-nav-border:  rgba(124,58,237,0.15);
+  --th-footer-bg:   rgba(241,245,249,0.95);
+  --th-scroll-trk:  #E2E8F0;
+  --th-scroll-tmb:  #7C3AED;
+  --th-dot-pattern: rgba(99,102,241,0.07);
+  --th-body-radial: rgba(124, 58, 237, 0.08);
+}
+
 @layer base {
   body {
-    @apply bg-brand-dark text-white font-inter antialiased selection:bg-brand-purple/30;
-    background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(124, 58, 237, 0.15), transparent);
+    background-color: var(--th-bg);
+    color: var(--th-text);
+    @apply font-inter antialiased;
+    selection-color: rgba(124,58,237,0.3);
+    background-image: radial-gradient(ellipse 80% 50% at 50% -20%, var(--th-body-radial), transparent);
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
   * {
     scroll-behavior: smooth;
   }
   ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: #07070F; }
-  ::-webkit-scrollbar-thumb { background: #7C3AED; border-radius: 4px; }
+  ::-webkit-scrollbar-track { background: var(--th-scroll-trk); }
+  ::-webkit-scrollbar-thumb { background: var(--th-scroll-tmb); border-radius: 4px; }
 }
 
 @layer utilities {
@@ -43,9 +80,10 @@
     background-image: linear-gradient(135deg, #7C3AED, #4F46E5);
   }
 
+  /* Dark mode glass card */
   .glass-card {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.07);
+    background: var(--th-card-bg);
+    border: 1px solid var(--th-border);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
   }
@@ -59,14 +97,30 @@
     box-shadow: 0 0 40px rgba(124, 58, 237, 0.1);
   }
 
+  /* Light mode overrides */
+  [data-theme="light"] .glass-card {
+    background: rgba(255,255,255,0.85);
+    border: 1px solid rgba(124,58,237,0.12);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+  }
+  [data-theme="light"] .glass-card-hover:hover {
+    background: rgba(255,255,255,0.98);
+    border-color: rgba(124,58,237,0.28);
+    box-shadow: 0 8px 40px rgba(124,58,237,0.12);
+  }
+
   .glow-purple {
     box-shadow: 0 0 60px rgba(124, 58, 237, 0.25);
   }
 
   .dot-pattern {
-    background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-image: radial-gradient(var(--th-dot-pattern) 1px, transparent 1px);
     background-size: 24px 24px;
   }
+
+  /* Th-aware text helpers */
+  .th-text       { color: var(--th-text); }
+  .th-text-muted { color: var(--th-text-muted); }
 
   /* Animations */
   @keyframes float {
@@ -149,9 +203,25 @@
     0%, 100% { opacity: 1; }
     50% { opacity: 0; }
   }
+
+  /* Light background blobs */
+  @keyframes blob-drift {
+    0%, 100% { transform: translate(0,0) scale(1); }
+    33%       { transform: translate(-30px,20px) scale(1.05); }
+    66%       { transform: translate(20px,-15px) scale(0.97); }
+  }
+  .animate-blob { animation: blob-drift 12s ease-in-out infinite; }
+  .animate-blob-delay-2 { animation: blob-drift 14s ease-in-out infinite 2s; }
+  .animate-blob-delay-4 { animation: blob-drift 10s ease-in-out infinite 4s; }
 }
 
-/* === NEW ADDITIONS BELOW EXISTING === */
+/* ── NEW ADDITIONS ── */
+
+/* Navbar theme toggle ring spin */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
 
 /* Fluid orb morphing */
 @keyframes orb-morph {
@@ -260,18 +330,16 @@
   animation: orb-morph 8s ease-in-out infinite, orb-breathe 6s ease-in-out infinite, orb-glow-pulse 4s ease-in-out infinite;
 }
 
-/* ═══════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
    LIGHTNING BUTTON EFFECTS
-═══════════════════════════════════════════════ */
+═══════════════════════════════════════════════════════════════ */
 
-/* Sweep shimmer across button face */
 @keyframes btn-sweep {
   0%, 70%, 100% { transform: translateX(-200%) skewX(-20deg); opacity: 0; }
   75%            { opacity: 1; }
   90%            { transform: translateX(300%) skewX(-20deg); opacity: 0; }
 }
 
-/* Electric border pulse */
 @keyframes btn-electric-pulse {
   0%, 100% {
     box-shadow:
@@ -288,13 +356,11 @@
   }
 }
 
-/* Under-glow bloom */
 @keyframes btn-under-bloom {
   0%, 100% { opacity: 0.45; transform: scaleX(0.75) scaleY(0.8); }
   50%       { opacity: 1;    transform: scaleX(1.1)  scaleY(1.2); }
 }
 
-/* Tiny arc flicker beside button */
 @keyframes btn-arc {
   0%, 85%, 100% { opacity: 0; }
   87%            { opacity: 0.9; clip-path: polygon(0 40%, 30% 0%, 50% 60%, 80% 10%, 100% 50%, 70% 100%, 40% 45%); }
@@ -302,13 +368,11 @@
   91%            { opacity: 0; }
 }
 
-/* ─ base lightning-button wrapper ─ */
 .btn-lightning-wrap {
   position: relative;
   display: inline-block;
 }
 
-/* Shimmer sweep */
 .btn-lightning-wrap > a::before,
 .btn-lightning-wrap > button::before {
   content: '';
@@ -328,14 +392,12 @@
   z-index: 1;
 }
 
-/* Electric pulse glow */
 .btn-electric {
   animation: btn-electric-pulse 2.4s ease-in-out infinite !important;
   position: relative;
   z-index: 1;
 }
 
-/* Under-glow blob */
 .btn-lightning-wrap::after {
   content: '';
   position: absolute;
@@ -351,12 +413,10 @@
   z-index: -1;
 }
 
-/* WhatsApp variant — green under-glow */
 .btn-lightning-wrap.btn-green::after {
   background: radial-gradient(ellipse, rgba(37,211,102,0.55) 0%, rgba(37,211,102,0.2) 50%, transparent 80%);
 }
 
-/* Arc sparks — absolute positioned tiny svg-like flickers */
 .btn-lightning-wrap::before {
   content: '';
   position: absolute;
@@ -375,4 +435,10 @@
   right: auto;
   left: -8px;
   animation-delay: 1.8s;
+}
+
+/* ── Dark/Light Toggle Switch ── */
+@keyframes toggle-sun-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }

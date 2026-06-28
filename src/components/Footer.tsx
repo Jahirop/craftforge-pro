@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { Link } from "react-router-dom";
 import { Zap, Linkedin, Instagram, ExternalLink, MessageCircle } from "lucide-react";
+import { useTheme } from "../context/ThemeContext";
 
 const LogoSvg = ({ col, colNext, size = 32 }: { col: string; colNext: string; size?: number }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 32 32" fill="none" style={{ display: "block" }}>
@@ -16,16 +17,7 @@ const LogoSvg = ({ col, colNext, size = 32 }: { col: string; colNext: string; si
   </svg>
 );
 
-const COLORS = [
-  "#7C3AED",
-  "#4F46E5",
-  "#3B82F6",
-  "#F97316",
-  "#10B981",
-  "#06B6D4",
-  "#EC4899",
-  "#F59E0B",
-];
+const COLORS = ["#7C3AED","#4F46E5","#3B82F6","#F97316","#10B981","#06B6D4","#EC4899","#F59E0B"];
 
 const SOCIALS = [
   { Icon: Linkedin,    href: "https://www.linkedin.com/in/jahiruddin-sekh-5535b023b/", label: "LinkedIn" },
@@ -36,36 +28,59 @@ const SOCIALS = [
 
 export default function Footer() {
   const [idx, setIdx] = useState(0);
+  const { isDark } = useTheme();
 
   useEffect(() => {
     const t = setInterval(() => setIdx((i) => (i + 1) % COLORS.length), 1800);
     return () => clearInterval(t);
   }, []);
 
-  return (
-    <footer className="border-t border-white/5 bg-brand-dark/80 backdrop-blur-xl">
-      <div className="max-w-2xl mx-auto px-6 py-14 flex flex-col items-center gap-8 text-center">
+  const borderTop = isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.06)";
+  const footerBg  = isDark ? "rgba(7,7,15,0.80)"      : "rgba(241,245,249,0.95)";
+  const descColor = isDark ? "#94A3B8"                 : "#64748B";
+  const divider   = isDark ? "rgba(255,255,255,0.05)"  : "rgba(0,0,0,0.06)";
 
-        {/* ── Logo + Brand ── */}
+  return (
+    <footer
+      className="backdrop-blur-xl"
+      style={{ borderTop: `1px solid ${borderTop}`, background: footerBg, transition: "background 0.3s ease" }}
+    >
+      <div className="max-w-2xl mx-auto px-6 sm:px-8 py-14 sm:py-16 flex flex-col items-center gap-8 text-center">
+
+        {/* Logo */}
         <div className="flex items-center gap-2">
           <div style={{ filter: `drop-shadow(0 0 8px ${COLORS[idx]}88)`, transition: "filter 0.8s ease" }}>
             <LogoSvg col={COLORS[idx]} colNext={COLORS[(idx + 1) % COLORS.length]} size={32} />
           </div>
-          <span
-            className="font-poppins font-bold text-xl"
-            style={{ color: COLORS[idx], transition: "color 0.8s ease" }}
-          >
+          <span className="font-poppins font-bold text-xl" style={{ color: COLORS[idx], transition: "color 0.8s ease" }}>
             Craftforge Pro
           </span>
         </div>
 
-        {/* ── Description ── */}
-        <p className="text-brand-grey text-sm leading-relaxed max-w-sm">
-          AI powered creative studio building intelligent brands at scale.
-          From prompt to production faster, smarter, better.
+        {/* Description */}
+        <p className="text-sm leading-relaxed max-w-sm" style={{ color: descColor }}>
+          AI powered creative studio building intelligent brands at scale. From prompt to production faster, smarter, better.
         </p>
 
-        {/* ── Social icons ── */}
+        {/* Nav links */}
+        <div className="flex flex-wrap gap-x-5 gap-y-2 justify-center">
+          {[
+            { to: "/",             label: "Home"           },
+            { to: "/services",     label: "Services"       },
+            { to: "/portfolio",    label: "Portfolio"      },
+            { to: "/about",        label: "About"          },
+            { to: "/contact",      label: "Contact"        },
+            { to: "/privacy-policy", label: "Privacy Policy" },
+          ].map(({ to, label }) => (
+            <Link key={to} to={to}
+              className="text-xs font-medium transition-colors hover:text-brand-purple"
+              style={{ color: descColor }}>
+              {label}
+            </Link>
+          ))}
+        </div>
+
+        {/* Socials */}
         <div className="flex gap-4 justify-center">
           {SOCIALS.map(({ Icon, href, label }, i) => {
             const color = COLORS[(idx + i * 2) % COLORS.length];
@@ -81,109 +96,17 @@ export default function Footer() {
                 className="relative w-11 h-11 rounded-xl flex items-center justify-center overflow-hidden group"
                 style={{
                   border: `1px solid ${color}45`,
-                  background: `${color}14`,
-                  boxShadow: `0 0 14px ${color}22`,
+                  background: isDark ? `${color}14` : `${color}10`,
+                  boxShadow: isDark ? `0 0 14px ${color}22` : `0 2px 10px ${color}18`,
                   transition: "border-color 0.8s ease, background 0.8s ease, box-shadow 0.8s ease",
                 }}
               >
-                {/* Gradient fill on hover */}
-                <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  style={{ background: `linear-gradient(135deg, ${color}, ${color}bb)` }}
-                />
-                {/* Translucent sheen */}
-                <div className="absolute inset-0 bg-gradient-to-b from-white/12 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                {/* Ambient glow halo */}
-                <motion.div
-                  className="absolute -inset-1 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  style={{ background: color, filter: "blur(10px)", zIndex: -1 }}
-                />
-                <Icon
-                  size={16}
-                  className="relative z-10 transition-colors duration-200"
-                  style={{ color: color, transition: "color 0.8s ease" }}
-                />
+                <Icon size={16} className="relative z-10 transition-colors duration-200" style={{ color, transition: "color 0.8s ease" }} />
               </motion.a>
             );
           })}
         </div>
 
-        {/* ── Divider ── */}
-        <div className="w-full border-t border-white/5" />
-
-        {/* ── Buttons ── */}
-        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-          {/* Start a New Project */}
-          <motion.div
-            whileHover={{ scale: 1.07 }}
-            whileTap={{ scale: 0.96 }}
-            transition={{ type: "spring", stiffness: 280, damping: 18 }}
-            className="relative"
-          >
-            <div
-              className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-4/5 h-5 rounded-full"
-              style={{
-                background: "radial-gradient(ellipse,rgba(124,58,237,0.7) 0%,rgba(6,182,212,0.35) 50%,transparent 80%)",
-                filter: "blur(8px)",
-                animation: "btn-under-bloom 2.4s ease-in-out infinite",
-              }}
-            />
-            <Link
-              to="/contact"
-              className="btn-electric relative flex items-center gap-3 px-10 py-4 bg-brand-gradient rounded-full font-bold text-white text-base overflow-hidden shadow-lg"
-              style={{
-                boxShadow: "0 0 28px rgba(124,58,237,0.45), 0 0 60px rgba(124,58,237,0.15)",
-              }}
-            >
-              <span
-                className="absolute inset-0 rounded-full pointer-events-none"
-                style={{
-                  background: "linear-gradient(105deg,transparent 0%,rgba(255,255,255,0.18) 45%,rgba(255,255,255,0.35) 50%,rgba(255,255,255,0.18) 55%,transparent 100%)",
-                  animation: "btn-sweep 4s ease-in-out infinite",
-                }}
-              />
-              <Zap size={17} />
-              START A NEW PROJECT
-            </Link>
-          </motion.div>
-
-          {/* Chat on WhatsApp */}
-          <motion.div
-            whileHover={{ scale: 1.07 }}
-            whileTap={{ scale: 0.96 }}
-            transition={{ type: "spring", stiffness: 280, damping: 18 }}
-            className="relative"
-          >
-            <div
-              className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-4/5 h-5 rounded-full"
-              style={{
-                background: "radial-gradient(ellipse,rgba(37,211,102,0.7) 0%,rgba(37,211,102,0.25) 50%,transparent 80%)",
-                filter: "blur(8px)",
-                animation: "btn-under-bloom 2.4s ease-in-out infinite",
-              }}
-            />
-            <a
-              href="https://wa.me/919641547271"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="relative flex items-center gap-3 px-10 py-4 rounded-full font-bold text-white text-base overflow-hidden shadow-lg"
-              style={{
-                background: "linear-gradient(135deg,#25D366,#128C7E)",
-                boxShadow: "0 0 28px rgba(37,211,102,0.45), 0 0 60px rgba(37,211,102,0.15)",
-              }}
-            >
-              <span
-                className="absolute inset-0 rounded-full pointer-events-none"
-                style={{
-                  background: "linear-gradient(105deg,transparent 0%,rgba(255,255,255,0.18) 45%,rgba(255,255,255,0.35) 50%,rgba(255,255,255,0.18) 55%,transparent 100%)",
-                  animation: "btn-sweep 4s ease-in-out infinite",
-                }}
-              />
-              <MessageCircle size={17} />
-              CHAT ON WHATSAPP
-            </a>
-          </motion.div>
-        </div>
 
       </div>
     </footer>

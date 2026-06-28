@@ -1,17 +1,20 @@
 import { motion } from "motion/react";
 
+import type { CSSProperties } from "react";
+
 interface Props {
   text: string;
   className?: string;
+  style?: CSSProperties;
   delay?: number;
   stagger?: number;
   once?: boolean;
 }
 
-export default function RevealText({ text, className = "", delay = 0, stagger = 0.02, once = true }: Props) {
+export default function RevealText({ text, className = "", style, delay = 0, stagger = 0.02, once = true }: Props) {
   const words = text.split(" ");
   return (
-    <div className={`flex flex-wrap gap-x-[0.3em] gap-y-0 ${className}`}>
+    <div className={`flex flex-wrap gap-x-[0.3em] gap-y-0 ${className}`} style={style}>
       {words.map((word, wi) => (
         <span key={wi} className="inline-flex overflow-hidden">
           {word.split("").map((char, ci) => (

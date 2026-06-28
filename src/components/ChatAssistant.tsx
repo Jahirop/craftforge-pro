@@ -1,57 +1,21 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { MessageCircle, X, Send, Bot, User, Minimize2 } from "lucide-react";
-import { GoogleGenAI } from "@google/genai";
+import { X, Send, User, Minimize2 } from "lucide-react";
+import { useTheme } from "../context/ThemeContext";
 
-const BUSINESS_CONTEXT = `
-You are the AI assistant for Craftforge Pro Studio, an AI-powered creative agency.
-
-ABOUT THE STUDIO:
-- Name: Craftforge Pro Studio (also known as Craftforge)
-- Owner/Founder: Jahiruddin Sekh — AI Creative Strategist, Prompt Engineer, Vibe Code Builder
-- Email: hello.craftforge.studio@gmail.com
-- WhatsApp: +91 9641547271
-- Location: India
-- Behance Portfolio: https://www.behance.net/Designer_Pro_Plus
-- Instagram: https://www.instagram.com/craftforge.studio/
-- LinkedIn: https://www.linkedin.com/in/jahiruddin-sekh-5535b023b/
-
-SERVICES WE OFFER:
-1. AI Graphic Design — Brand visuals, product graphics, campaign creatives from single prompts
-2. AI Video & Motion — Short form video, motion content, visual storytelling at scale
-3. Vibe Code & AI Websites — Intelligent, conversion-focused websites built with AI-assisted development
-4. Ecommerce Creative — High-converting product visuals for Amazon, Shopify, Flipkart
-5. AI Automation — Autonomous pipelines using n8n, Make, and AI agents that eliminate repetitive work
-6. Generative AI Systems — Prompt libraries, reusable AI pipelines, production systems built to scale
-
-RESULTS & STATS:
-- 9x faster creative production
-- 1000+ AI-powered digital assets delivered
-- 67% manual workload reduction
-- 6+ major marketplaces scaled
-
-PRICING (approximate ranges):
-- Starter projects: ₹1,000 – ₹25,000
-- Growth projects: ₹25,000 – ₹75,000
-- Enterprise/custom: ₹75,000 – ₹2,00,000+
-- Custom budget available for large projects
-
-HOW TO GET STARTED:
-1. Contact via WhatsApp at +91 9641547271
-2. Email at hello.craftforge.studio@gmail.com
-3. Fill the contact form on the website
-4. Connect via LinkedIn or Instagram
-
-PORTFOLIO HIGHLIGHTS:
-- AI Brand Visual System for luxury fragrance brand
-- AI Motion Content Pipeline for social media
-- Complete E-commerce Listing Pack for Amazon & Flipkart
-- AI Content Automation Pipeline with n8n
-- AI Prompt Engineering System
-- AI Print-on-Demand Design System (300+ SKUs)
-
-Be helpful, concise, friendly, and professional. Answer questions about services, pricing, the portfolio, how to get started, or anything related to the studio. If unsure, direct to WhatsApp or email. Keep responses short (2-4 sentences max). Use → and short bullet points for lists.
-`;
+// Official WhatsApp Logo SVG (extracted from official asset with text removed)
+const WhatsAppIcon = ({ size = 20, className = "" }: { size?: number; className?: string }) => (
+  <svg
+    viewBox="0 0 346 346"
+    width={size}
+    height={size}
+    className={className}
+    fill="currentColor"
+  >
+    <path d="M173,0C77.45,0,0,77.45,0,173c0,31.43,8.38,60.91,23.04,86.31L0,346l89.87-21.25c24.67,13.54,53,21.25,83.13,21.25,95.55,0,173-77.45,173-173S268.55,0,173,0ZM173,315.01c-28.91,0-55.81-8.64-78.24-23.48l-53.1,13.52,14.89-50.75c-16.11-23.03-25.56-51.06-25.56-81.3,0-78.43,63.58-142.01,142.01-142.01s142.01,63.58,142.01,142.01-63.58,142.01-142.01,142.01Z" />
+    <path d="M213.54,195.84l41.86,19.73c1.92.91,3.15,2.85,2.98,4.97-.45,5.51-2.66,16.55-12.56,26.44-27.93,27.93-78.09-3.67-80.13-4.89-12.34-6.63-24.06-15.49-35.17-26.61-11.11-11.11-19.98-22.84-26.61-35.17-1.22-2.04-32.82-52.19-4.89-80.13,9.9-9.9,20.93-12.1,26.44-12.56,2.12-.17,4.07,1.06,4.97,2.98l19.73,41.86c.93,1.98.52,4.33-1.02,5.88l-14.71,14.71c-3.18,3.18-4.12,8.13-1.92,12.06,5.37,9.63,12.59,18.9,20.95,27.43,8.53,8.36,17.8,15.58,27.43,20.95,3.93,2.19,8.88,1.26,12.06-1.92l14.71-14.71c1.55-1.55,3.9-1.96,5.88-1.02Z" />
+  </svg>
+);
 
 interface Message {
   role: "user" | "assistant";
@@ -59,19 +23,20 @@ interface Message {
 }
 
 const QUICK_QUESTIONS = [
-  "What services do you offer?",
-  "How much does it cost?",
-  "How do I get started?",
-  "Show me your portfolio",
+  "I want to start a new project 🚀",
+  "Tell me about pricing 💰",
+  "Show me your portfolio 📁",
+  "I have a custom requirement ⚙️",
 ];
 
 export default function ChatAssistant() {
+  const { isDark } = useTheme();
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
       content:
-        "Hi! I'm the Craftforge AI assistant. Ask me anything about our services, pricing, or how to get started! 🚀",
+        "Hi! Welcome to Craftforge Pro Studio. 🎨 How can we help you accelerate your brand? Type your message below, and we'll instantly connect you with Jahir on WhatsApp to get started!",
     },
   ]);
   const [input, setInput] = useState("");
@@ -92,7 +57,7 @@ export default function ChatAssistant() {
     }
   }, [open, minimized]);
 
-  const sendMessage = async (text: string) => {
+  const sendMessage = (text: string) => {
     if (!text.trim() || loading) return;
 
     const userMsg: Message = { role: "user", content: text };
@@ -100,53 +65,20 @@ export default function ChatAssistant() {
     setInput("");
     setLoading(true);
 
-    try {
-      const apiKey = process.env.GEMINI_API_KEY;
-      if (!apiKey) {
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: "assistant",
-            content:
-              "I'm currently offline. Please reach us directly → WhatsApp: +91 9641547271 or email: hello.craftforge.studio@gmail.com",
-          },
-        ]);
-        return;
-      }
-
-      const ai = new GoogleGenAI({ apiKey });
-      const history = messages.slice(1).map((m) => ({
-        role: m.role === "user" ? "user" : "model",
-        parts: [{ text: m.content }],
-      }));
-
-      const chat = ai.chats.create({
-        model: "gemini-2.0-flash",
-        history,
-        config: {
-          systemInstruction: BUSINESS_CONTEXT,
-          maxOutputTokens: 300,
-          temperature: 0.7,
-        },
-      });
-
-      const response = await chat.sendMessage({ message: text });
-      const reply =
-        response.text || "I couldn't process that. Please contact us directly!";
-
-      setMessages((prev) => [...prev, { role: "assistant", content: reply }]);
-    } catch {
+    // Mock quick response then redirect
+    setTimeout(() => {
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
-          content:
-            "Something went wrong. Reach us directly → WhatsApp: +91 9641547271",
+          content: "Connecting you on WhatsApp now... 🚀",
         },
       ]);
-    } finally {
       setLoading(false);
-    }
+      
+      const whatsappUrl = `https://wa.me/919641547271?text=${encodeURIComponent(text)}`;
+      window.open(whatsappUrl, "_blank");
+    }, 850);
   };
 
   return (
@@ -159,8 +91,13 @@ export default function ChatAssistant() {
         }}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-brand-gradient rounded-full flex items-center justify-center shadow-2xl shadow-brand-purple/40 animate-pulse-glow"
-        aria-label="Chat with us"
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-2xl transition-all duration-300 cursor-pointer"
+        style={{
+          background: "linear-gradient(135deg, #25D366, #128C7E)",
+          boxShadow: "0 8px 32px rgba(37, 211, 102, 0.4)",
+          color: "#ffffff",
+        }}
+        aria-label="Chat with us on WhatsApp"
       >
         <AnimatePresence mode="wait">
           {open ? (
@@ -175,13 +112,13 @@ export default function ChatAssistant() {
             </motion.div>
           ) : (
             <motion.div
-              key="chat"
+              key="whatsapp"
               initial={{ rotate: 90, opacity: 0 }}
               animate={{ rotate: 0, opacity: 1 }}
               exit={{ rotate: -90, opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <MessageCircle size={22} />
+              <WhatsAppIcon size={24} />
             </motion.div>
           )}
         </AnimatePresence>
@@ -192,7 +129,7 @@ export default function ChatAssistant() {
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          className="fixed bottom-[72px] right-[18px] z-50 w-5 h-5 bg-brand-orange rounded-full flex items-center justify-center text-[10px] font-bold text-white"
+          className="fixed bottom-[72px] right-[18px] z-50 w-5 h-5 bg-brand-orange rounded-full flex items-center justify-center text-[10px] font-bold text-white shadow-md pointer-events-none"
         >
           1
         </motion.div>
@@ -206,32 +143,54 @@ export default function ChatAssistant() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            className="fixed bottom-24 right-6 z-50 w-[340px] md:w-[380px] rounded-3xl overflow-hidden shadow-2xl shadow-black/50 border border-white/10"
+            className="fixed bottom-24 right-6 z-50 w-[340px] md:w-[380px] rounded-3xl overflow-hidden shadow-2xl"
             style={{
-              background: "rgba(13, 13, 26, 0.95)",
+              background: isDark ? "rgba(13,13,26,0.97)" : "rgba(248,249,255,0.97)",
+              border: isDark ? "1px solid rgba(255,255,255,0.10)" : "1px solid rgba(124,58,237,0.18)",
               backdropFilter: "blur(20px)",
+              boxShadow: isDark ? "0 8px 40px rgba(0,0,0,0.5)" : "0 8px 40px rgba(0,0,0,0.12)",
             }}
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-white/10 bg-brand-gradient">
+            <div 
+              className="flex items-center justify-between p-4 text-white"
+              style={{ background: "linear-gradient(135deg, #25D366, #128C7E)" }}
+            >
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center">
-                  <Bot size={18} />
+                <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-white/20 bg-white/10">
+                  <img
+                    src="/super-pro-profile.webp"
+                    alt="Jahir Sekh"
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLElement).style.display = "none";
+                    }}
+                  />
                 </div>
                 <div>
-                  <p className="font-bold text-sm">Craftforge AI</p>
-                  <p className="text-[11px] text-white/70 flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse inline-block" />
-                    Online · Typically replies instantly
+                  <div className="flex items-center gap-1.5">
+                    <p className="font-bold text-sm">Jahir Sekh</p>
+                    <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
+                  </div>
+                  <p className="text-[11px] text-white/80">
+                    Craftforge Pro · Online
                   </p>
                 </div>
               </div>
-              <button
-                onClick={() => setMinimized(!minimized)}
-                className="p-1.5 rounded-lg hover:bg-white/20 transition-colors"
-              >
-                <Minimize2 size={16} />
-              </button>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => setMinimized(!minimized)}
+                  className="p-1.5 rounded-lg hover:bg-white/15 transition-colors cursor-pointer"
+                >
+                  <Minimize2 size={16} />
+                </button>
+                <button
+                  onClick={() => setOpen(false)}
+                  className="p-1.5 rounded-lg hover:bg-white/15 transition-colors cursor-pointer"
+                >
+                  <X size={16} />
+                </button>
+              </div>
             </div>
 
             <AnimatePresence>
@@ -254,24 +213,26 @@ export default function ChatAssistant() {
                         }`}
                       >
                         <div
-                          className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 ${
+                          className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-white ${
                             msg.role === "user"
                               ? "bg-brand-purple"
-                              : "bg-brand-gradient"
+                              : "bg-emerald-500"
                           }`}
                         >
                           {msg.role === "user" ? (
                             <User size={14} />
                           ) : (
-                            <Bot size={14} />
+                            <WhatsAppIcon size={14} />
                           )}
                         </div>
                         <div
                           className={`max-w-[80%] rounded-2xl px-3 py-2 text-sm leading-relaxed ${
-                            msg.role === "user"
-                              ? "bg-brand-purple/80 text-white rounded-tr-sm"
-                              : "bg-white/5 border border-white/10 text-white/90 rounded-tl-sm"
+                            msg.role === "user" ? "rounded-tr-sm" : "rounded-tl-sm"
                           }`}
+                          style={msg.role === "user"
+                            ? { background: "rgba(124,58,237,0.85)", color: "#ffffff" }
+                            : { background: isDark ? "rgba(255,255,255,0.05)" : "rgba(241,245,249,0.90)", border: isDark ? "1px solid rgba(255,255,255,0.10)" : "1px solid rgba(0,0,0,0.08)", color: isDark ? "rgba(255,255,255,0.90)" : "#1E293B" }
+                          }
                         >
                           {msg.content}
                         </div>
@@ -279,14 +240,15 @@ export default function ChatAssistant() {
                     ))}
                     {loading && (
                       <div className="flex items-start gap-2">
-                        <div className="w-7 h-7 rounded-full bg-brand-gradient flex items-center justify-center flex-shrink-0">
-                          <Bot size={14} />
+                        <div className="w-7 h-7 rounded-full bg-emerald-500 text-white flex items-center justify-center flex-shrink-0">
+                          <WhatsAppIcon size={14} />
                         </div>
-                        <div className="bg-white/5 border border-white/10 rounded-2xl rounded-tl-sm px-4 py-3 flex gap-1 items-center">
+                        <div className="rounded-2xl rounded-tl-sm px-4 py-3 flex gap-1 items-center"
+                        style={{ background: isDark ? "rgba(255,255,255,0.05)" : "rgba(241,245,249,0.90)", border: isDark ? "1px solid rgba(255,255,255,0.10)" : "1px solid rgba(0,0,0,0.08)" }}>
                           {[0, 1, 2].map((i) => (
                             <span
                               key={i}
-                              className="w-1.5 h-1.5 rounded-full bg-brand-purple chat-dot"
+                              className="w-1.5 h-1.5 rounded-full bg-emerald-500 chat-dot"
                             />
                           ))}
                         </div>
@@ -302,7 +264,7 @@ export default function ChatAssistant() {
                         <button
                           key={q}
                           onClick={() => sendMessage(q)}
-                          className="text-[11px] px-3 py-1.5 rounded-full bg-brand-purple/20 border border-brand-purple/30 text-brand-purple hover:bg-brand-purple/30 transition-colors"
+                          className="text-[11px] px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/20 transition-colors cursor-pointer font-medium"
                         >
                           {q}
                         </button>
@@ -311,21 +273,27 @@ export default function ChatAssistant() {
                   )}
 
                   {/* Input */}
-                  <div className="p-3 border-t border-white/10 flex gap-2">
+                  <div className="p-3 flex gap-2" style={{ borderTop: isDark ? "1px solid rgba(255,255,255,0.10)" : "1px solid rgba(0,0,0,0.07)" }}>
                     <input
                       ref={inputRef}
                       value={input}
                       onChange={(e) => setInput(e.target.value)}
                       onKeyDown={(e) => e.key === "Enter" && sendMessage(input)}
-                      placeholder="Ask anything..."
-                      className="flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-brand-purple/50 transition-colors"
+                      placeholder="Type a message to WhatsApp..."
+                      className="flex-1 rounded-xl px-3 py-2 text-sm focus:outline-none transition-colors"
+                      style={{
+                        background: isDark ? "rgba(255,255,255,0.05)" : "rgba(241,245,249,0.90)",
+                        border: isDark ? "1px solid rgba(255,255,255,0.10)" : "1px solid rgba(0,0,0,0.10)",
+                        color: isDark ? "#ffffff" : "#0F172A",
+                      }}
                     />
                     <motion.button
                       onClick={() => sendMessage(input)}
                       disabled={!input.trim() || loading}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className="w-9 h-9 rounded-xl bg-brand-gradient flex items-center justify-center disabled:opacity-40 transition-opacity flex-shrink-0"
+                      className="w-9 h-9 rounded-xl flex items-center justify-center disabled:opacity-40 transition-opacity flex-shrink-0 cursor-pointer text-white"
+                      style={{ background: "linear-gradient(135deg, #25D366, #128C7E)" }}
                     >
                       <Send size={15} />
                     </motion.button>

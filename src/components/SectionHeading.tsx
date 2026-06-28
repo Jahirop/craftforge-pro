@@ -18,6 +18,7 @@ export default function SectionHeading({ title, subtext, centered = true, badge 
       <RevealText
         text={title}
         className={`text-3xl md:text-5xl font-poppins font-bold leading-tight ${centered ? "justify-center" : "justify-start"}`}
+        style={{ color: "var(--th-text)" }}
       />
       {subtext && (
         <motion.p
@@ -25,7 +26,8 @@ export default function SectionHeading({ title, subtext, centered = true, badge 
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className={`text-brand-grey text-base md:text-lg max-w-2xl mt-4 leading-relaxed ${centered ? "mx-auto" : ""}`}
+          className={`text-base md:text-lg max-w-2xl mt-4 leading-relaxed ${centered ? "mx-auto" : ""}`}
+          style={{ color: "var(--th-text-muted)" }}
         >
           {subtext}
         </motion.p>

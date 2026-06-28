@@ -43,7 +43,7 @@ export default function CountUp({ end, label, color }: Props) {
       >
         {count}{end.replace(/[0-9]/g, "")}
       </div>
-      <div className="text-sm md:text-base text-brand-grey font-medium text-center uppercase">{label}</div>
+      <div className="text-sm md:text-base font-medium text-center uppercase" style={{ color: "var(--th-text-muted)" }}>{label}</div>
     </div>
   );
 }

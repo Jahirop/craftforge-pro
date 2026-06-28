@@ -1,0 +1,163 @@
+# Craftforge Pro Studio — Complete specification
+
+> This document contains the full textual content, service offerings, pricing structures, FAQs, and developer profiles of Craftforge Pro Studio. It is optimized for consumption by large language models, retrieval-augmented generation (RAG) systems, and AI search engines.
+
+---
+
+## 1. Company overview & positioning
+
+Craftforge Pro is a premium, founder-led creative studio specializing in brand identity, packaging, digital experiences, and AI automation.
+
+- **Positioning**: Founder-led premium boutique studio with global craft standards and AI-native execution.
+- **Value Proposition**: We replace slow, bloated holding-company agency hierarchies and inconsistent freelance networks with an agile, system-driven workflow that is powered by AI.
+- **Outcome Metrics**:
+  - **9x Faster**: Speed of creative production cycles compared to traditional design agencies.
+  - **1000+ Assets**: Generative and production-grade assets successfully delivered.
+  - **67% Reduction**: Manual workload saved for clients via autonomous workflows.
+  - **6+ Marketplaces**: Amazon, Shopify, Flipkart, and other channels scaled at production speed.
+
+---
+
+## 2. Core Service Pillars
+
+### A. Forge / Brand & Identity
+- **Tagline**: Brands forged with intent.
+- **Description**: We build the strategic foundation of your identity. Cohesive brand systems, visual guidelines, typography, and logo design crafted to command a unique premium. We construct the strategic foundation of your identity.
+- **Deliverables**:
+  - Brand identity & logo concepts
+  - Visual identity systems & style guides
+  - Brand strategy & positioning models
+  - Brand guidelines & type system specifications
+  - Corporate stationery & digital assets
+  - Vector asset packs & typography guidelines
+
+### B. Form / Packaging & Product
+- **Tagline**: Premium physical assets, engineered for scale.
+- **Description**: High-end packaging systems designed to dominate retail shelves, featuring luxury fragrance packaging (e.g. Midnight Queen Pure Parfum), beauty & cosmetics boxes, and premium D2C systems.
+- **Deliverables**:
+  - Fragrance & cosmetic packaging design
+  - Premium bottle and label design mockups
+  - Custom retail boxes & shipping carton designs
+  - 3D product visualizations & digital renders
+  - Print-ready packaging templates
+  - Unboxing experience flow mapping
+
+### C. Field / Web & Digital
+- **Tagline**: High-performance digital products.
+- **Description**: High-performance React & Tailwind websites, custom Shopify storefronts, Webflow platforms, and premium digital products designed to convert visitors into loyal clients.
+- **Deliverables**:
+  - Landing page design & development
+  - Full multi-page websites
+  - Custom Shopify e-commerce setups
+  - React + Tailwind component systems
+  - Mobile-first responsive UI/UX design
+  - SEO & speed optimization setup
+
+### D. Forecast / AI & Marketing
+- **Tagline**: Reusable AI-native creative infrastructure.
+- **Description**: Bespoke prompt engineering libraries, n8n/Make automation, and GEO-aligned marketing systems that let you scale output up to 9x without increasing headcount.
+- **Deliverables**:
+  - Custom prompt engineering libraries
+  - Reusable AI content creation pipelines
+  - n8n & Make workflow automation setups
+  - Autonomous social publishing engines
+  - Generative AI marketing campaigns
+  - GEO (Generative Engine Optimization) alignment
+
+---
+
+## 3. Pricing Packages
+
+- **Starter (₹1,000 – ₹25,000)**: Perfect for solo founders and small brands getting started with AI creative.
+  - Single deliverable project
+  - AI-generated assets (up to 20)
+  - 1 revision round
+  - 3–5 day delivery
+  - WhatsApp support
+- **Growth (₹25,000 – ₹75,000)**: For growing brands that need a complete creative system or automation pipeline.
+  - Multi-deliverable project scope (aligned to core pillars)
+  - Full brand visual or automation system
+  - 3 revision rounds
+  - 7–14 day delivery
+  - Priority WhatsApp support
+  - Strategy consultation included
+- **Enterprise (₹75,000+)**: Custom AI infrastructure for established brands, agencies, and marketplaces.
+  - Custom scope & timeline
+  - Dedicated AI pipeline build
+  - Unlimited revisions
+  - Ongoing retainer options
+  - Direct founder access
+  - Full documentation & training
+
+---
+
+## 4. Consolidated Frequently Asked Questions (FAQ)
+
+- **How fast can you actually deliver?**
+  Most starter projects are delivered in 3–5 business days. Growth projects take 7–14 days. Speed depends on scope — we'll give you a precise timeline after the brief.
+- **Do I need to know anything about AI to work with you?**
+  Not at all. You just need to know what you want to build. We handle all the AI tooling, prompting, and system design on our end.
+- **What industries do you specialise in?**
+  Ecommerce, luxury D2C brands, SaaS, agencies, content creators, and marketplaces. If you have a brand and want to scale creatively, we can help.
+- **Can you handle ongoing work, not just one-off projects?**
+  Yes — we offer monthly retainers for brands that need consistent creative output, automation maintenance, or ongoing AI system management.
+- **What if I'm not happy with the output?**
+  We include revision rounds in every project. If we're genuinely not hitting the mark, we'll work until you're satisfied or refund, no questions asked.
+- **How do we get started?**
+  Message us on WhatsApp (+91 9641547271), fill in the contact form, or email hello.craftforge.studio@gmail.com. We'll respond within a few hours with next steps.
+- **How quickly will you respond to inquiries?**
+  Typically within 2–4 hours on WhatsApp. Email responses within 24 hours. For urgent projects, WhatsApp is best.
+- **Do you work with international clients?**
+  Yes, we work with clients globally. Pricing is in INR but we can discuss USD/GBP equivalent for international projects.
+- **What do I need to prepare before reaching out?**
+  Just a rough idea of what you want to build and your approximate budget range. We'll handle the rest in the discovery call.
+- **Do you offer a free consultation?**
+  Yes, the first 30-minute strategy call is always free. We'll scope your project and give honest recommendations before any commitment.
+
+---
+
+## 5. Projects & Case Studies (Portfolio)
+
+1. **Midnight Queen Pure Parfum | Brand Visual System (Forge - Featured)**
+   - **Description**: Complete brand identity and visual system for India's first pure parfum luxury fragrance brand. Designed to command a unique premium. Delivered 120+ assets in 5 days.
+   - **Tags**: Brand Identity, AI Design, Visual System
+   - **Behance Link**: https://www.behance.net/gallery/239980485/E-commerce-Listing-Pack-Amazon-A-Premium
+2. **Midnight Queen Pure Parfum | Custom Packaging System (Form)**
+   - **Description**: High-end fragrance bottle mockups, retail boxes, and premium D2C custom packaging design system. Engineered for high-converting shelf presence and premium feel.
+   - **Tags**: Luxury Packaging, Fragrance, Custom Mockups
+   - **Behance Link**: https://www.behance.net/gallery/216067635/T-SHIRT-DESIGN
+3. **Midnight Queen Pure Parfum | Motion Content Pipeline (Forecast)**
+   - **Description**: AI-powered short-form video and motion content pipeline built for luxury fragrance social distribution at scale. Reusable templates for 3 platform formats.
+   - **Tags**: Motion Content, AI Pipeline, Social Content
+   - **Behance Link**: https://www.behance.net/gallery/240008013/Ai-Video-Content-Suite-BB-Premium-Perfume-Ecommerce
+4. **D2C Launch: Premium E-commerce Catalog (Field - Featured)**
+   - **Description**: High-performance website UI, custom storefronts, and conversion-optimized listing assets. Engineered for high-converting web presence.
+   - **Tags**: Shopify, UI/UX, Product Catalog
+   - **Behance Link**: https://www.behance.net/gallery/247458413/All-E-commerce-Listing-Pack-Amazon-Flipkart
+5. **Multi-Channel Content Automation Pipeline (Forecast)**
+   - **Description**: End-to-end n8n workflow automation for creative asset generation, scheduling, and multi-platform publishing. Reduced manual workload by 67%.
+   - **Tags**: n8n, Automation, AI Systems
+   - **Behance Link**: https://www.behance.net/gallery/240005159/BB-E-commerce-Perfume-Catalog-with-Amazon-A-F
+6. **Enterprise Prompt Engineering Library (Forecast)**
+   - **Description**: Consistent prompt libraries and custom generative models optimized for scaling brand production by 9x without increasing headcount.
+   - **Tags**: Prompt Library, AI Scaling, Workflow
+   - **Behance Link**: https://www.behance.net/gallery/247630553/Craftforge-AI-Powered-Creative-Ecommerce-Website
+
+---
+
+## 6. Founder Profile — Jahiruddin Sekh
+
+Jahiruddin Sekh is the founder and Lead Creative Strategist of Craftforge Pro.
+
+- **Roles**: Brand Strategist, Packaging Architect, Digital Engineer, AI Systems Designer.
+- **Bio**: Jahiruddin Sekh combines classic design thinking with AI-native execution to forge premium brand identities, high-converting digital products, and luxury packaging designs—including our flagship case study, the Midnight Queen Pure Parfum. By developing bespoke AI creative systems, he enables brands to scale their content pipeline by up to 9x while slashing manual production workloads by 67%.
+- **Core Values**:
+  - **Speed Without Compromise**: Generative tools allow rapid exploration of more creative permutations.
+  - **Results Over Aesthetics**: Visuals are systematically linked to conversion rates and brand performance.
+  - **Systems, Not One-Offs**: We hand over prompt libraries and automated workflows as reusable assets.
+  - **AI-First, Always**: Workflows are architected around AI tooling from day one.
+- **Social Profiles**:
+  - **LinkedIn**: https://www.linkedin.com/in/jahiruddin-sekh-5535b023b/
+  - **Instagram**: https://www.instagram.com/designerpro_plus/
+  - **Instagram (Business)**: https://www.instagram.com/craftforge.studio/
+  - **Behance**: https://www.behance.net/Designer_Pro_Plus/

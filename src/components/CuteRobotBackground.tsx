@@ -13,7 +13,9 @@
  * multiplied by S so they stay proportional.
  */
 import { useEffect, useRef } from "react";
+import type { CSSProperties } from "react";
 import { useLocation } from "react-router-dom";
+import { useTheme } from "../context/ThemeContext";
 
 /* ─── Route accent colours ──────────────────────────────────── */
 const ROUTE_COLOR: Record<string, [number, number, number]> = {
@@ -498,6 +500,7 @@ export default function CuteRobotBackground() {
   const canvasRef    = useRef<HTMLCanvasElement>(null);
   const animRef      = useRef(0);
   const location     = useLocation();
+  const { isDark, isTransitioning, transitionProgress, transitionDir } = useTheme();
 
   const colorRef     = useRef<[number,number,number]>([124, 58, 237]);
   const targetColor  = useRef<[number,number,number]>([124, 58, 237]);
@@ -600,6 +603,29 @@ export default function CuteRobotBackground() {
     };
   }, []);
 
+  /* ── Robot opacity driven by theme + transition state ── */
+  let robotOpacity: number;
+  let blendMode: string;
+
+  if (isTransitioning) {
+    if (transitionDir === "to-light") {
+      // Quickly fade out as overlay covers (0→0.06)
+      robotOpacity = transitionProgress < 0.06
+        ? 0.9 * (1 - transitionProgress / 0.06)
+        : 0;
+      blendMode = "screen";
+    } else {
+      // to-dark: robot materialises as overlay lifts (0.84→1.0)
+      robotOpacity = transitionProgress >= 0.84
+        ? 0.9 * ((transitionProgress - 0.84) / 0.16)
+        : 0;
+      blendMode = "screen";
+    }
+  } else {
+    robotOpacity = isDark ? 0.9 : 0;
+    blendMode    = "screen";
+  }
+
   return (
     <div
       className="fixed inset-0 pointer-events-none overflow-hidden"
@@ -608,7 +634,11 @@ export default function CuteRobotBackground() {
     >
       <canvas
         ref={canvasRef}
-        style={{ mixBlendMode: "screen", opacity: 0.9 }}
+        style={{
+          mixBlendMode: blendMode as CSSProperties["mixBlendMode"],
+          opacity: robotOpacity,
+          transition: isTransitioning ? "none" : "opacity 0.6s ease",
+        }}
       />
     </div>
   );

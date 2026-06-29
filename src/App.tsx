@@ -16,6 +16,7 @@ import Portfolio from "./pages/Portfolio";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import Hub from "./pages/Hub";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -49,6 +50,7 @@ function AppInner() {
             <Route path="/about"     element={<About />}     />
             <Route path="/contact"        element={<Contact />}        />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/hub"            element={<Hub />}           />
           </Routes>
         </AnimatePresence>
 

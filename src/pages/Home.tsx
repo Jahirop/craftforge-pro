@@ -229,12 +229,12 @@ export default function Home() {
         schema={homeSchema}
       />
       {/* HERO */}
-      <section className="relative min-h-screen flex items-center justify-center px-6 pt-9 pb-10 overflow-hidden">
+      <section className="relative px-6 pt-10 pb-20 overflow-hidden">
         <div className="absolute inset-0 dot-pattern opacity-40 pointer-events-none" />
         <div className="absolute top-1/3 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] rounded-full blur-[120px] pointer-events-none"
           style={{ background: isDark ? "rgba(124,58,237,0.10)" : "rgba(124,58,237,0.06)" }} />
 
-        <div className="relative z-10 max-w-4xl w-full mx-auto flex flex-col gap-6 items-center text-center">
+        <div className="relative z-10 max-w-4xl w-full mx-auto flex flex-col gap-6 items-center text-center mt-2">
           <CyclingBadge label="AI Powered Creative Studio" animate={false} />
 
           <RevealText
@@ -248,15 +248,7 @@ export default function Home() {
             <HeroTypewriter isDark={isDark} />
           </motion.div>
 
-          <motion.p
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.0 }}
-            className="text-base md:text-lg max-w-2xl mx-auto leading-relaxed"
-            style={{ color: textMuted }}
-          >
-            Craftforge is a founder led, premium boutique <strong>branding agency in India</strong>. We combine global craft standards with <strong>AI native execution</strong> ✦ delivering high end <strong>luxury packaging design</strong>
-          </motion.p>
+
 
           <motion.div
             initial={{ opacity: 0, y: 15 }}
@@ -310,9 +302,7 @@ export default function Home() {
               style={{ color: textPrimary }}
               once={false}
             />
-            <p className="mt-2 max-w-xl mx-auto text-sm" style={{ color: textMuted }}>
-              Cohesive brand strategy, luxury D2C packaging design, high performance web engineering, and generative AI operations designed to command your unique premium.
-            </p>
+
           </div>
 
           {/* Horizontal track */}

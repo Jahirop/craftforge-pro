@@ -233,14 +233,13 @@ const EXPERIENCE = [
 ];
 
 const SKILL_GROUPS = [
-  { category: "AI Image", color: "#EC4899", skills: ["Midjourney v7", "DALL·E 3", "Ideogram", "Adobe Firefly", "Nano Banana Pro", "Kontext", "Stable Diffusion"] },
   { category: "Design", color: "#7C3AED", skills: ["Adobe Photoshop", "Illustrator", "InDesign", "CorelDRAW", "Figma", "Canva", "Adobe Express"] },
-  { category: "AI Video", color: "#3B82F6", skills: ["RunwayML Gen 3", "Kling AI", "Pika Labs", "Hailuoai", "Veo", "Seedance", "Sora"] },
-  { category: "Video Edit", color: "#06B6D4", skills: ["Adobe Premiere Pro", "After Effects", "DaVinci Resolve", "CapCut", "Filmora", "Descript"] },
+  { category: "Video", color: "#06B6D4", skills: ["Adobe Premiere Pro", "After Effects", "DaVinci Resolve", "CapCut", "Filmora", "Descript"] },
   { category: "Automation", color: "#10B981", skills: ["n8n", "Claude API", "Claude Code", "ChatGPT API", "Gemini API", "Zapier", "Make", "Google AI Studio"] },
-  { category: "Prompt Eng.", color: "#F59E0B", skills: ["Structured Libraries", "Chain of Thought", "Few Shot Templates", "Negative Prompting", "Style Anchoring", "LLM Validation"] },
-  { category: "Research", color: "#6366F1", skills: ["NotebookLM", "Google AI Studio", "LMArena", "CometAPI", "Perplexity AI"] },
   { category: "E-Commerce", color: "#EF4444", skills: ["Amazon Seller Central", "Etsy", "Flipkart", "Meesho", "Redbubble", "Teepublic", "Shopify"] },
+  { category: "AI Image", color: "#EC4899", skills: ["Midjourney", "DALL·E 3", "Ideogram", "Adobe Firefly", "Kontext", "Stable Diffusion"] },
+  { category: "AI Video", color: "#3B82F6", skills: ["RunwayML Gen 3", "Kling AI", "Pika Labs", "Hailuoai", "Veo", "Seedance", "Sora"] },
+  { category: "Prompt Eng.", color: "#F59E0B", skills: ["Structured Libraries", "Chain of Thought", "Few Shot Templates", "Negative Prompting", "Style Anchoring", "LLM Validation"] },
   { category: "Managed", color: "#8B5CF6", skills: ["Instagram", "YouTube", "TikTok", "LinkedIn", "Facebook", "Pinterest", "Notion"] }
 ];
 

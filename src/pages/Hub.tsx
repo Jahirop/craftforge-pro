@@ -19,7 +19,12 @@ const Behance = (p: IconProps) => <Svg {...p} d="M22 7h-7V5h7v2zm1.726 10c-.442 
 const Dribbble = (p: IconProps) => <Svg {...p} d="M12 0C5.385 0 0 5.385 0 12s5.385 12 12 12 12-5.385 12-12S18.615 0 12 0zm7.917 5.534A10.18 10.18 0 0122.27 11.9c-.327-.067-3.605-.733-6.905-.318-.073-.18-.146-.36-.226-.54-.2-.474-.42-.94-.654-1.394 3.638-1.48 5.29-3.616 5.432-3.794zM12 1.74c2.605 0 4.99.977 6.8 2.583-.12.17-1.61 2.16-5.13 3.48C11.99 4.86 10.05 2.36 9.75 1.98A10.2 10.2 0 0112 1.74zM7.84 2.66c.285.388 2.19 2.9 3.69 5.85-4.66 1.24-8.78 1.22-9.22 1.21A10.29 10.29 0 017.84 2.66zM1.74 12.02v-.31c.43.01 5.27.07 10.24-1.42.286.557.556 1.124.806 1.7l-.39.112C7.2 13.86 4.382 18.58 4.146 18.98A10.2 10.2 0 011.74 12.02zm10.26 10.24c-2.36 0-4.535-.81-6.26-2.16.185-.378 2.28-4.42 8.124-6.46l.067-.022c1.43 3.71 2.02 6.823 2.17 7.715a10.18 10.18 0 01-4.1.927zm5.77-1.85c-.104-.624-.647-3.6-1.976-7.26 3.11-.497 5.83.32 6.168.43a10.21 10.21 0 01-4.192 6.83z" />;
 const Pinterest = (p: IconProps) => <Svg {...p} d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.402.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607 0 11.985-5.365 11.985-11.987C23.97 5.39 18.592.026 11.985.026L12.017 0z" />;
 const XLogo = (p: IconProps) => <Svg {...p} d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />;
-const WhatsApp = (p: IconProps) => <Svg {...p} d="M12.01 0C5.38 0 0 5.38 0 12.01c0 2.12.55 4.18 1.61 5.99L0 24l6.16-1.61c1.74 1 3.8 1.58 5.86 1.58 6.63 0 12.01-5.38 12.01-12.01C24.03 5.38 18.65 0 12.01 0zm0 22.01c-1.8 0-3.56-.48-5.1-1.39l-.36-.21-3.79.99 1.01-3.7-.24-.38a9.98 9.98 0 01-1.53-5.32c0-5.52 4.49-10.01 10.01-10.01 5.52 0 10.01 4.49 10.01 10.01-.01 5.53-4.5 10.01-10.01 10.01zm5.49-7.5c-.3-.15-1.78-.88-2.06-.98-.28-.1-.49-.15-.69.15-.2.3-.77.98-.94 1.18-.17.2-.35.22-.65.07a8.26 8.26 0 01-2.42-1.5c-1.88-1.67-3.15-3.74-3.52-4.38-.37-.64-.04-.99.26-1.29.27-.27.6-.7.9-1.05.3-.35.4-.59.6-.99.2-.4.1-.75-.05-1.05-.15-.3-.69-1.66-.94-2.27-.25-.59-.5-.51-.69-.52-.18-.01-.39-.01-.59-.01-.2 0-.54.07-.82.38-.28.3-1.08 1.06-1.08 2.59 0 1.53 1.11 3.01 1.26 3.21.15.2 2.19 3.34 5.3 4.68.74.32 1.32.51 1.77.65.74.24 1.42.2 1.95.12.6-.09 1.78-.73 2.03-1.43.25-.7.25-1.29.17-1.42-.08-.13-.28-.2-.58-.35z" />;
+const WhatsApp = ({ size = 18 }: IconProps) => (
+  <svg width={size} height={size} viewBox="0 0 346 346" fill="currentColor" aria-hidden="true">
+    <path d="M173,0C77.45,0,0,77.45,0,173c0,31.43,8.38,60.91,23.04,86.31L0,346l89.87-21.25c24.67,13.54,53,21.25,83.13,21.25,95.55,0,173-77.45,173-173S268.55,0,173,0ZM173,315.01c-28.91,0-55.81-8.64-78.24-23.48l-53.1,13.52,14.89-50.75c-16.11-23.03-25.56-51.06-25.56-81.3,0-78.43,63.58-142.01,142.01-142.01s142.01,63.58,142.01,142.01-63.58,142.01-142.01,142.01Z" />
+    <path d="M213.54,195.84l41.86,19.73c1.92.91,3.15,2.85,2.98,4.97-.45,5.51-2.66,16.55-12.56,26.44-27.93,27.93-78.09-3.67-80.13-4.89-12.34-6.63-24.06-15.49-35.17-26.61-11.11-11.11-19.98-22.84-26.61-35.17-1.22-2.04-32.82-52.19-4.89-80.13,9.9-9.9,20.93-12.1,26.44-12.56,2.12-.17,4.07,1.06,4.97,2.98l19.73,41.86c.93,1.98.52,4.33-1.02,5.88l-14.71,14.71c-3.18,3.18-4.12,8.13-1.92,12.06,5.37,9.63,12.59,18.9,20.95,27.43,8.53,8.36,17.8,15.58,27.43,20.95,3.93,2.19,8.88,1.26,12.06-1.92l14.71-14.71c1.55-1.55,3.9-1.96,5.88-1.02Z" />
+  </svg>
+);
 
 /* ── Data ── */
 type Item = { platform: string; name: string; url: string; color: string; Icon: (p: IconProps) => ReactElement };
@@ -364,6 +369,8 @@ export default function Hub() {
       <section className="pt-10 pb-16 px-6 md:px-12 relative overflow-hidden z-10">
         <div className="max-w-6xl mx-auto glass-card rounded-3xl p-6 sm:p-10 md:p-12 lg:p-16 relative overflow-hidden group border"
           style={{
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
             borderColor: isDark ? "rgba(255,255,255,0.07)" : "rgba(124,58,237,0.15)",
             boxShadow: isDark
               ? `0 4px 30px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(255,255,255,0.01)`
@@ -455,6 +462,8 @@ export default function Hub() {
             transition={{ duration: 0.6 }}
             className="glass-card rounded-3xl p-6 sm:p-8 md:p-10 mb-12 relative overflow-hidden group border"
             style={{
+              backdropFilter: "blur(20px)",
+              WebkitBackdropFilter: "blur(20px)",
               borderColor: isDark ? "rgba(255,255,255,0.07)" : "rgba(124,58,237,0.15)",
               boxShadow: isDark
                 ? `0 4px 30px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(255,255,255,0.01)`
@@ -510,6 +519,8 @@ export default function Hub() {
                     transition={{ duration: 0.5, delay: idx * 0.1 }}
                     className="glass-card rounded-2xl overflow-hidden border"
                     style={{
+                      backdropFilter: "blur(20px)",
+                      WebkitBackdropFilter: "blur(20px)",
                       borderColor: isOpen ? cycle : (isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.08)"),
                       background: isOpen
                         ? (isDark ? "rgba(255, 255, 255, 0.04)" : "rgba(124, 58, 237, 0.03)")
@@ -608,6 +619,8 @@ export default function Hub() {
                   transition={{ duration: 0.4, delay: idx * 0.05 }}
                   className="glass-card rounded-2xl p-5 border flex flex-col h-full"
                   style={{
+                    backdropFilter: "blur(20px)",
+                    WebkitBackdropFilter: "blur(20px)",
                     borderColor: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.08)",
                   }}
                 >
@@ -647,7 +660,7 @@ export default function Hub() {
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
               className="glass-card rounded-2xl p-6 border flex flex-col gap-4"
-              style={{ borderColor: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.08)" }}
+              style={{ borderColor: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.08)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)" }}
             >
               <h5 className="font-poppins font-bold text-base flex items-center gap-2 mb-2" style={{ color: textPrimary }}>
                 <GraduationCap size={20} style={{ color: cycle }} />
@@ -661,17 +674,23 @@ export default function Hub() {
                 </div>
                 
                 <div className="relative pl-4 border-l-2" style={{ borderColor: `${cycle}44` }}>
-                  <h6 className="font-poppins font-bold text-xs sm:text-sm" style={{ color: textPrimary }}>Generative AI by Microsoft and LinkedIn</h6>
+                  <a href="https://www.linkedin.com/learning/certificates/82ca568ac6f2ae7ed0f531355ce8be863fb540e0746fc2331e65add3d06eb0e3" target="_blank" rel="noopener noreferrer" className="hover:underline transition-all decoration-1">
+                    <h6 className="font-poppins font-bold text-xs sm:text-sm" style={{ color: textPrimary }}>Generative AI by Microsoft and LinkedIn</h6>
+                  </a>
                   <p className="text-[11px] font-semibold mt-0.5" style={{ color: cycle }}>Microsoft &amp; LinkedIn • 2026</p>
                 </div>
 
                 <div className="relative pl-4 border-l-2" style={{ borderColor: `${cycle}44` }}>
-                  <h6 className="font-poppins font-bold text-xs sm:text-sm" style={{ color: textPrimary }}>Microsoft 365 Copilot for Work</h6>
+                  <a href="https://www.linkedin.com/learning/certificates/b08a358ede86012a83aa5d0c9e9e183fe7f699ec8ab31517a1b1f7ce00a6f1aa" target="_blank" rel="noopener noreferrer" className="hover:underline transition-all decoration-1">
+                    <h6 className="font-poppins font-bold text-xs sm:text-sm" style={{ color: textPrimary }}>Microsoft 365 Copilot for Work</h6>
+                  </a>
                   <p className="text-[11px] font-semibold mt-0.5" style={{ color: cycle }}>Microsoft • 2026</p>
                 </div>
 
                 <div className="relative pl-4 border-l-2" style={{ borderColor: `${cycle}44` }}>
-                  <h6 className="font-poppins font-bold text-xs sm:text-sm" style={{ color: textPrimary }}>Ethics in Generative AI</h6>
+                  <a href="https://www.linkedin.com/learning/certificates/d42d0f435d0083d4719d9bd16ccc9d5ac55a5d070877af40d066e42b68ba039f" target="_blank" rel="noopener noreferrer" className="hover:underline transition-all decoration-1">
+                    <h6 className="font-poppins font-bold text-xs sm:text-sm" style={{ color: textPrimary }}>Ethics in Generative AI</h6>
+                  </a>
                   <p className="text-[11px] font-semibold mt-0.5" style={{ color: cycle }}>LinkedIn • 2026</p>
                 </div>
               </div>
@@ -688,7 +707,7 @@ export default function Hub() {
               {/* Active Learning Areas */}
               <div 
                 className="glass-card rounded-2xl p-6 border flex flex-col gap-3 flex-1"
-                style={{ borderColor: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.08)" }}
+                style={{ borderColor: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.08)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)" }}
               >
                 <h5 className="font-poppins font-bold text-base flex items-center gap-2 mb-2" style={{ color: textPrimary }}>
                   <BookOpen size={18} style={{ color: cycle }} />
@@ -712,7 +731,7 @@ export default function Hub() {
               {/* Languages */}
               <div 
                 className="glass-card rounded-2xl p-6 border flex flex-col gap-3"
-                style={{ borderColor: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.08)" }}
+                style={{ borderColor: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.08)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)" }}
               >
                 <h5 className="font-poppins font-bold text-base flex items-center gap-2" style={{ color: textPrimary }}>
                   <Languages size={18} style={{ color: cycle }} />
@@ -738,6 +757,8 @@ export default function Hub() {
             transition={{ duration: 0.6 }}
             className="glass-card rounded-3xl p-6 sm:p-8 md:p-10 mt-16 relative overflow-hidden group border"
             style={{
+              backdropFilter: "blur(20px)",
+              WebkitBackdropFilter: "blur(20px)",
               borderColor: isDark ? "rgba(255,255,255,0.07)" : "rgba(124,58,237,0.15)",
               boxShadow: isDark
                 ? `0 4px 30px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(255,255,255,0.01)`
